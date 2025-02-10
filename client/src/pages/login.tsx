@@ -5,8 +5,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "wouter";
-import { useToast } from "@/hooks/use-toast";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -14,7 +15,9 @@ const formSchema = z.object({
 });
 
 export default function Login() {
-  const { toast } = useToast();
+  const { loginMutation, user } = useAuth();
+  const [, navigate] = useLocation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -23,11 +26,14 @@ export default function Login() {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast({
-      title: "Login functionality coming soon",
-      description: "This feature is currently under development.",
-    });
+    loginMutation.mutate(values);
   };
 
   return (
@@ -68,8 +74,8 @@ export default function Login() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                {loginMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </form>
           </Form>

@@ -9,6 +9,7 @@ import Quiz from "@/pages/quiz";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import Header from "@/components/header";
+import { AuthProvider } from "@/hooks/use-auth";
 
 function Router() {
   return (
@@ -31,8 +32,10 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <AuthProvider>
+        <Router />
+        <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

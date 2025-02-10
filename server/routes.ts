@@ -1,8 +1,13 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth } from "./auth";
 
 export function registerRoutes(app: Express): Server {
+  // Set up authentication routes
+  setupAuth(app);
+
+  // Existing routes
   app.get("/api/lessons", async (_req, res) => {
     const lessons = await storage.getLessons();
     res.json(lessons);
