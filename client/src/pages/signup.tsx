@@ -5,8 +5,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "wouter";
-import { useToast } from "@/hooks/use-toast";
+import { Link, useLocation } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
+import { useEffect } from "react";
+import { insertUserSchema } from "@shared/schema";
 
 const formSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -18,7 +20,9 @@ const formSchema = z.object({
 });
 
 export default function Signup() {
-  const { toast } = useToast();
+  const { registerMutation, user } = useAuth();
+  const [, navigate] = useLocation();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,15 +32,19 @@ export default function Signup() {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    toast({
-      title: "Sign up functionality coming soon",
-      description: "This feature is currently under development.",
-    });
+    const { confirmPassword, ...registerData } = values;
+    registerMutation.mutate(registerData);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[80vh]">
+    <div className="flex items-next-center justify-center min-h-[80vh]">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl">Create an account</CardTitle>
@@ -86,8 +94,12 @@ export default function Signup() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
-                Sign Up
+              <Button 
+                type="submit" 
+                className="w-full"
+                disabled={registerMutation.isPending}
+              >
+                {registerMutation.isPending ? "Creating account..." : "Sign Up"}
               </Button>
             </form>
           </Form>
