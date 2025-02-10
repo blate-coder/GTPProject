@@ -6,6 +6,8 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Lesson from "@/pages/lesson";
 import Quiz from "@/pages/quiz";
+import Login from "@/pages/login";
+import Signup from "@/pages/signup";
 import Header from "@/components/header";
 
 function Router() {
@@ -17,6 +19,8 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/lesson/:id" component={Lesson} />
           <Route path="/quiz/:lessonId" component={Quiz} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
           <Route component={NotFound} />
         </Switch>
       </main>
