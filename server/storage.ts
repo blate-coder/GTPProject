@@ -42,9 +42,28 @@ export class MemStorage implements IStorage {
         type: "song",
         mediaUrl: "https://example.com/gurenge.mp4",
         content: {
-          lyrics: "紅蓮華...",
-          translation: "Crimson Lotus...",
-          vocabulary: [/* vocabulary items */]
+          lyrics: "赫く尊き 永久の盾よ\n命を燃やして 護りし者よ\n鬼を祓いて 済ませぬまま\n今日も陽は落ちて 朱く染まる",
+          translation: "Oh crimson shield, noble and eternal\nThose who burned their lives to protect\nUnable to completely exorcise the demons\nToday again the sun sets, dyed in crimson",
+          vocabulary: [
+            {
+              word: "赫く",
+              reading: "あかく",
+              meaning: "Crimson, bright red",
+              example: "空が赫く染まる - The sky is dyed crimson"
+            },
+            {
+              word: "尊き",
+              reading: "とうとき",
+              meaning: "Noble, precious, sacred",
+              example: "尊き命 - Precious life"
+            },
+            {
+              word: "護りし",
+              reading: "まもりし",
+              meaning: "To protect (classical form)",
+              example: "国を護りし勇者 - The hero who protected the country"
+            }
+          ]
         },
         difficulty: "beginner"
       },
