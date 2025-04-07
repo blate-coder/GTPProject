@@ -82,9 +82,10 @@ export default function QuizPage() {
     if (currentQuestion < quiz.questions.length - 1) {
       setCurrentQuestion(c => c + 1);
     } else {
-      // Quiz is finished
+      // Quiz is finished - no need to update the score here as it's already updated
+      // when showing the answer in the first part of handleNext
       const finalScore = {
-        correct: score.correct + (answers[currentQuestion] === quiz.questions[currentQuestion].answer ? 1 : 0),
+        correct: score.correct,
         total: quiz.questions.length
       };
       
