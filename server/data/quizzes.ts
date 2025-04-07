@@ -5,7 +5,7 @@ export const quizzes: Quiz[] = [
   {
     id: 1,
     lessonId: 1,
-    tags: ["vocabulary", "reading"],
+    tags: ["vocabulary"],
     questions: [
       {
         text: "What does '赫く' (あかく) mean?",
@@ -36,7 +36,7 @@ export const quizzes: Quiz[] = [
   },{
     id: 2,
     lessonId: 2,
-    tags: ["vocabulary", "reading"],
+    tags: ["vocabulary"],
     questions: [
       {
         text: "What does '夢' (ゆめ) mean?",
@@ -67,7 +67,7 @@ export const quizzes: Quiz[] = [
   },{
     id: 3,
     lessonId: 3,
-    tags: ["vocabulary", "reading", "phrases"],
+    tags: ["vocabulary", "phrases"],
     questions: [
       {
         text: "What does '駆ける' (かける) mean?",
@@ -98,7 +98,7 @@ export const quizzes: Quiz[] = [
   },{
     id: 4,
     lessonId: 4,
-    tags: ["vocabulary", "reading", "phrases"],
+    tags: ["vocabulary", "phrases"],
     questions: [
       {
         text: "What does '変わらず' (かわらず) mean?",
@@ -129,7 +129,7 @@ export const quizzes: Quiz[] = [
   },{
     id: 5,
     lessonId: 5,
-    tags: ["vocabulary", "reading", "anime"],
+    tags: ["vocabulary", "anime"],
     questions: [
       {
         text: "What does '名前' (なまえ) mean?",
@@ -219,6 +219,167 @@ export const quizzes: Quiz[] = [
       }
     ]
   },
+  // Add new reading quizzes
+  {
+    id: 7,
+    lessonId: 7,
+    tags: ["reading", "beginner"],
+    questions: [
+      {
+        text: "Read and choose the correct meaning of this text: '私の名前は田中です。'",
+        options: ["My name is Tanaka.", "His name is Tanaka.", "Her name is Tanaka.", "Their names are Tanaka."],
+        answer: "My name is Tanaka."
+      },
+      {
+        text: "What does '学生' mean in '私は学生です。'?",
+        options: ["Student", "Teacher", "Doctor", "Office worker"],
+        answer: "Student"
+      },
+      {
+        text: "Choose the correct translation: '今日は天気がいいです。'",
+        options: ["The weather is nice today.", "The weather was nice yesterday.", "The weather will be nice tomorrow.", "The weather is bad today."],
+        answer: "The weather is nice today."
+      },
+      {
+        text: "What time is expressed in this sentence: '7時に起きます。'?",
+        options: ["7:00", "8:00", "7:30", "7:15"],
+        answer: "7:00"
+      },
+      {
+        text: "What is being described in this sentence: '私の部屋は小さいです。'?",
+        options: ["The size of a room", "The color of a room", "The location of a room", "The temperature of a room"],
+        answer: "The size of a room"
+      }
+    ]
+  },
+  {
+    id: 8,
+    lessonId: 8,
+    tags: ["reading", "beginner"],
+    questions: [
+      {
+        text: "Read the following text and determine what Yuki usually does on weekends: '私の名前はユキです。週末に、よく公園に行きます。'",
+        options: ["Goes to the park", "Stays at home", "Studies at the library", "Visits friends"],
+        answer: "Goes to the park"
+      },
+      {
+        text: "What does Takeshi like according to this sentence: '私の友達の武は犬が好きです。'?",
+        options: ["Dogs", "Cats", "Birds", "Fish"],
+        answer: "Dogs"
+      },
+      {
+        text: "Read and select what you need to buy according to this text: 'スーパーに行って、牛乳とパンを買ってください。'",
+        options: ["Milk and bread", "Eggs and cheese", "Vegetables and fruit", "Meat and fish"],
+        answer: "Milk and bread"
+      },
+      {
+        text: "What season is described in this sentence: '今は夏です。とても暑いです。'?",
+        options: ["Summer", "Winter", "Spring", "Fall"],
+        answer: "Summer"
+      },
+      {
+        text: "What is the relationship between the speakers in this dialogue: 'A: 先生、おはようございます。B: おはよう、鈴木さん。'?",
+        options: ["Teacher and student", "Friends", "Family members", "Colleagues"],
+        answer: "Teacher and student"
+      }
+    ]
+  },
+  {
+    id: 9,
+    lessonId: 9,
+    tags: ["reading", "intermediate"],
+    questions: [
+      {
+        text: "Read this passage and answer: '昨日、友達と映画を見に行きました。とても面白かったです。' What did the person do yesterday?",
+        options: ["Went to see a movie with a friend", "Went shopping with a friend", "Studied with a friend", "Ate dinner with a friend"],
+        answer: "Went to see a movie with a friend"
+      },
+      {
+        text: "What does this sign mean? '立入禁止'",
+        options: ["No entry", "Exit only", "Caution", "Emergency exit"],
+        answer: "No entry"
+      },
+      {
+        text: "Read and interpret: '電車の中で携帯電話で話さないでください。'",
+        options: ["Please don't talk on your cell phone on the train.", "Please turn off your cell phone on the train.", "Please use your cell phone on the train.", "Please charge your cell phone on the train."],
+        answer: "Please don't talk on your cell phone on the train."
+      },
+      {
+        text: "What is the main idea of this text? '日本の四季は春、夏、秋、冬です。春は桜がきれいです。'",
+        options: ["Japan has four seasons and cherry blossoms are beautiful in spring.", "Japan only has spring season.", "Cherry blossoms bloom in all seasons in Japan.", "Japan has different flowers for each season."],
+        answer: "Japan has four seasons and cherry blossoms are beautiful in spring."
+      },
+      {
+        text: "What will the weather be like tomorrow according to this forecast? '明日の天気予報：東京は雨が降るでしょう。傘を持っていってください。'",
+        options: ["Rainy", "Sunny", "Cloudy", "Snowy"],
+        answer: "Rainy"
+      }
+    ]
+  },
+  {
+    id: 10,
+    lessonId: 10,
+    tags: ["reading", "intermediate"],
+    questions: [
+      {
+        text: "Read this email excerpt and determine its purpose: '田中様、お世話になっております。先日の会議の議事録を添付いたします。ご確認ください。'",
+        options: ["Sending minutes of a meeting", "Scheduling a new meeting", "Cancelling a meeting", "Introducing a new colleague"],
+        answer: "Sending minutes of a meeting"
+      },
+      {
+        text: "What is the writer asking in this note? '明日の会議に出席できますか？ご都合を教えてください。'",
+        options: ["If you can attend tomorrow's meeting", "If you can postpone tomorrow's meeting", "If you can prepare for tomorrow's meeting", "If you can cancel tomorrow's meeting"],
+        answer: "If you can attend tomorrow's meeting"
+      },
+      {
+        text: "Read and interpret: '風邪をひいたので、今日は休みます。'",
+        options: ["Taking a day off because of a cold", "Working from home today", "Going to see a doctor today", "Leaving early today"],
+        answer: "Taking a day off because of a cold"
+      },
+      {
+        text: "What does this train announcement mean? '次は新宿駅です。電車は右側のドアが開きます。'",
+        options: ["The next station is Shinjuku. Doors will open on the right side.", "The next station is Shinjuku. Doors will open on the left side.", "The train will skip Shinjuku station.", "The train will terminate at Shinjuku station."],
+        answer: "The next station is Shinjuku. Doors will open on the right side."
+      },
+      {
+        text: "Read this restaurant sign and determine when it's closed: '営業時間：午前11時から午後10時まで、水曜日定休日'",
+        options: ["Wednesdays", "Weekends", "Mornings before 11 AM", "Nights after 10 PM"],
+        answer: "Wednesdays"
+      }
+    ]
+  },
+  {
+    id: 11,
+    lessonId: 11,
+    tags: ["reading", "advanced"],
+    questions: [
+      {
+        text: "Read this article excerpt and identify the main topic: '近年、日本では少子高齢化が進み、社会保障制度の見直しが課題となっている。'",
+        options: ["Aging population and social security reform", "Economic growth in Japan", "Education system reforms", "Environmental protection measures"],
+        answer: "Aging population and social security reform"
+      },
+      {
+        text: "What historical event is referenced in this passage? '1945年8月、広島と長崎に原子爆弾が投下され、多くの人々が亡くなった。'",
+        options: ["Atomic bombings of Hiroshima and Nagasaki", "The end of the Edo period", "The Meiji Restoration", "The Great Kanto Earthquake"],
+        answer: "Atomic bombings of Hiroshima and Nagasaki"
+      },
+      {
+        text: "Read and interpret this business email phrase: '今後ともご指導ご鞭撻のほど、よろしくお願い申し上げます。'",
+        options: ["We look forward to your continued guidance and support.", "We apologize for any inconvenience caused.", "We will contact you again soon.", "We are grateful for your business."],
+        answer: "We look forward to your continued guidance and support."
+      },
+      {
+        text: "What concept is being explained in this text? '「もったいない」という言葉は、物を大切にする日本の伝統的な価値観を表している。'",
+        options: ["The traditional Japanese value of not being wasteful", "The importance of punctuality in Japanese culture", "The concept of harmony in Japanese society", "The Japanese tea ceremony traditions"],
+        answer: "The traditional Japanese value of not being wasteful"
+      },
+      {
+        text: "Read and determine the author's view: '現代の技術発展は私たちの生活を便利にする一方で、新たな問題も生み出している。'",
+        options: ["Technology has both benefits and drawbacks", "Technology only improves our lives", "Technology is creating more problems than solutions", "Technology development should be stopped"],
+        answer: "Technology has both benefits and drawbacks"
+      }
+    ]
+  }
 ];
 
 // Helper function to get a quiz by lesson ID

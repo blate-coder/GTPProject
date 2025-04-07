@@ -266,6 +266,227 @@ export const lessons: Lesson[] = [
     },
     difficulty: "intermediate"
   },
+  // Add new reading-focused lessons
+  {
+    id: 7,
+    title: "Basic Japanese Self-Introduction",
+    description: "Learn to read and understand simple Japanese self-introductions",
+    type: "reading",
+    mediaUrl: "",
+    content: {
+      lyrics: "私の名前は田中です。\n私は学生です。\n今日は天気がいいです。\n7時に起きます。\n私の部屋は小さいです。",
+      translation: "My name is Tanaka.\nI am a student.\nThe weather is nice today.\nI wake up at 7:00.\nMy room is small.",
+      vocabulary: [
+        {
+          word: "名前",
+          reading: "なまえ",
+          meaning: "Name",
+          example: "あなたの名前は何ですか？ - What is your name?"
+        },
+        {
+          word: "学生",
+          reading: "がくせい",
+          meaning: "Student",
+          example: "私は大学の学生です。 - I am a university student."
+        },
+        {
+          word: "天気",
+          reading: "てんき",
+          meaning: "Weather",
+          example: "明日の天気はどうですか？ - How will the weather be tomorrow?"
+        },
+        {
+          word: "起きます",
+          reading: "おきます",
+          meaning: "To wake up (polite form)",
+          example: "毎日6時に起きます。 - I wake up at 6 every day."
+        },
+        {
+          word: "部屋",
+          reading: "へや",
+          meaning: "Room",
+          example: "この部屋は広いです。 - This room is spacious."
+        }
+      ]
+    },
+    difficulty: "beginner"
+  },
+  {
+    id: 8,
+    title: "Daily Life in Japanese",
+    description: "Learn to read and understand simple Japanese texts about daily life",
+    type: "reading",
+    mediaUrl: "",
+    content: {
+      lyrics: "私の名前はユキです。週末に、よく公園に行きます。\n私の友達の武は犬が好きです。\nスーパーに行って、牛乳とパンを買ってください。\n今は夏です。とても暑いです。\nA: 先生、おはようございます。B: おはよう、鈴木さん。",
+      translation: "My name is Yuki. I often go to the park on weekends.\nMy friend Takeshi likes dogs.\nPlease go to the supermarket and buy milk and bread.\nIt's summer now. It's very hot.\nA: Good morning, teacher. B: Good morning, Suzuki.",
+      vocabulary: [
+        {
+          word: "週末",
+          reading: "しゅうまつ",
+          meaning: "Weekend",
+          example: "週末何をしますか？ - What will you do on the weekend?"
+        },
+        {
+          word: "公園",
+          reading: "こうえん",
+          meaning: "Park",
+          example: "近くに公園があります。 - There is a park nearby."
+        },
+        {
+          word: "友達",
+          reading: "ともだち",
+          meaning: "Friend",
+          example: "彼は私の親しい友達です。 - He is my close friend."
+        },
+        {
+          word: "スーパー",
+          reading: "すーぱー",
+          meaning: "Supermarket",
+          example: "スーパーで買い物をします。 - I go shopping at the supermarket."
+        },
+        {
+          word: "先生",
+          reading: "せんせい",
+          meaning: "Teacher",
+          example: "田中先生は英語の先生です。 - Mr. Tanaka is an English teacher."
+        }
+      ]
+    },
+    difficulty: "beginner"
+  },
+  {
+    id: 9,
+    title: "Simple Japanese Narratives",
+    description: "Practice reading and understanding everyday Japanese situations",
+    type: "reading",
+    mediaUrl: "",
+    content: {
+      lyrics: "昨日、友達と映画を見に行きました。とても面白かったです。\n立入禁止\n電車の中で携帯電話で話さないでください。\n日本の四季は春、夏、秋、冬です。春は桜がきれいです。\n明日の天気予報：東京は雨が降るでしょう。傘を持っていってください。",
+      translation: "Yesterday, I went to see a movie with a friend. It was very interesting.\nNo entry\nPlease don't talk on your cell phone on the train.\nJapan has four seasons: spring, summer, fall, and winter. Cherry blossoms are beautiful in spring.\nWeather forecast for tomorrow: It will probably rain in Tokyo. Please take an umbrella with you.",
+      vocabulary: [
+        {
+          word: "昨日",
+          reading: "きのう",
+          meaning: "Yesterday",
+          example: "昨日何をしましたか？ - What did you do yesterday?"
+        },
+        {
+          word: "映画",
+          reading: "えいが",
+          meaning: "Movie",
+          example: "週末に映画を見ました。 - I watched a movie on the weekend."
+        },
+        {
+          word: "立入禁止",
+          reading: "たちいりきんし",
+          meaning: "No entry",
+          example: "そのエリアは立入禁止です。 - That area is off-limits."
+        },
+        {
+          word: "四季",
+          reading: "しき",
+          meaning: "Four seasons",
+          example: "日本には四季があります。 - Japan has four seasons."
+        },
+        {
+          word: "天気予報",
+          reading: "てんきよほう",
+          meaning: "Weather forecast",
+          example: "天気予報を見ましたか？ - Did you see the weather forecast?"
+        }
+      ]
+    },
+    difficulty: "intermediate"
+  },
+  {
+    id: 10,
+    title: "Practical Japanese Reading",
+    description: "Read and understand commonly encountered Japanese text in daily life",
+    type: "reading",
+    mediaUrl: "",
+    content: {
+      lyrics: "田中様、お世話になっております。先日の会議の議事録を添付いたします。ご確認ください。\n明日の会議に出席できますか？ご都合を教えてください。\n風邪をひいたので、今日は休みます。\n次は新宿駅です。電車は右側のドアが開きます。\n営業時間：午前11時から午後10時まで、水曜日定休日",
+      translation: "Dear Mr. Tanaka, Thank you for your continued support. I am attaching the minutes of the recent meeting. Please check them.\nCan you attend tomorrow's meeting? Please let me know your availability.\nI've caught a cold, so I'll take the day off today.\nThe next station is Shinjuku. The doors will open on the right side of the train.\nBusiness hours: 11 AM to 10 PM, closed on Wednesdays.",
+      vocabulary: [
+        {
+          word: "お世話になっております",
+          reading: "おせわになっております",
+          meaning: "Thank you for your support (business formal)",
+          example: "いつもお世話になっております。 - Thank you for your continued support."
+        },
+        {
+          word: "議事録",
+          reading: "ぎじろく",
+          meaning: "Minutes (of a meeting)",
+          example: "会議の議事録を取りました。 - I took minutes of the meeting."
+        },
+        {
+          word: "出席",
+          reading: "しゅっせき",
+          meaning: "Attendance",
+          example: "会議に出席する予定です。 - I plan to attend the meeting."
+        },
+        {
+          word: "風邪をひく",
+          reading: "かぜをひく",
+          meaning: "To catch a cold",
+          example: "昨日から風邪をひいています。 - I've had a cold since yesterday."
+        },
+        {
+          word: "営業時間",
+          reading: "えいぎょうじかん",
+          meaning: "Business hours",
+          example: "営業時間は何時までですか？ - Until what time are your business hours?"
+        }
+      ]
+    },
+    difficulty: "intermediate"
+  },
+  {
+    id: 11,
+    title: "Advanced Japanese Reading",
+    description: "Develop advanced Japanese reading comprehension skills with complex texts",
+    type: "reading",
+    mediaUrl: "",
+    content: {
+      lyrics: "近年、日本では少子高齢化が進み、社会保障制度の見直しが課題となっている。\n1945年8月、広島と長崎に原子爆弾が投下され、多くの人々が亡くなった。\n今後ともご指導ご鞭撻のほど、よろしくお願い申し上げます。\n「もったいない」という言葉は、物を大切にする日本の伝統的な価値観を表している。\n現代の技術発展は私たちの生活を便利にする一方で、新たな問題も生み出している。",
+      translation: "In recent years, Japan has been facing an aging population with declining birthrates, and reviewing the social security system has become a challenge.\nIn August 1945, atomic bombs were dropped on Hiroshima and Nagasaki, and many people died.\nWe look forward to your continued guidance and support.\nThe word 'mottainai' represents the traditional Japanese value of treasuring things and not being wasteful.\nWhile modern technological development makes our lives convenient, it also creates new problems.",
+      vocabulary: [
+        {
+          word: "少子高齢化",
+          reading: "しょうしこうれいか",
+          meaning: "Declining birthrate and aging population",
+          example: "少子高齢化は日本の大きな社会問題です。 - The declining birthrate and aging population is a major social issue in Japan."
+        },
+        {
+          word: "社会保障",
+          reading: "しゃかいほしょう",
+          meaning: "Social security",
+          example: "社会保障制度の改革が必要です。 - Reform of the social security system is necessary."
+        },
+        {
+          word: "ご指導ご鞭撻",
+          reading: "ごしどうごべんたつ",
+          meaning: "Guidance and encouragement (formal business expression)",
+          example: "今後ともご指導ご鞭撻のほどよろしくお願いいたします。 - We look forward to your continued guidance and encouragement."
+        },
+        {
+          word: "もったいない",
+          reading: "もったいない",
+          meaning: "Wasteful",
+          example: "食べ物を捨てるのはもったいないです。 - It's wasteful to throw away food."
+        },
+        {
+          word: "技術発展",
+          reading: "ぎじゅつはってん",
+          meaning: "Technological development",
+          example: "近年の技術発展は目覚ましいです。 - Recent technological development has been remarkable."
+        }
+      ]
+    },
+    difficulty: "advanced"
+  }
 ];
 
 // Helper function to get all lessons
