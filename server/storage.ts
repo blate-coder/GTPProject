@@ -69,7 +69,42 @@ export class MemStorage implements IStorage {
       },
     ];
 
+    const mockQuizzes: Quiz[] = [
+      {
+        id: 1,
+        lessonId: 1,
+        questions: [
+          {
+            text: "What does '赫く' (あかく) mean?",
+            options: ["Crimson/bright red", "Blue", "Green", "Yellow"],
+            answer: "Crimson/bright red"
+          },
+          {
+            text: "What does '尊き' (とうとき) mean?",
+            options: ["Noble/sacred", "Fast", "Slow", "Heavy"],
+            answer: "Noble/sacred"
+          },
+          {
+            text: "What is the correct reading for '護りし'?",
+            options: ["まもりし", "かまりし", "たもりし", "はもりし"],
+            answer: "まもりし"
+          },
+          {
+            text: "What is the Japanese word for 'crimson'?",
+            options: ["赫く", "尊き", "永久", "朱く"],
+            answer: "赫く"
+          },
+          {
+            text: "Complete the lyric: '命を_____ 護りし者よ'",
+            options: ["燃やして", "壊して", "忘れて", "覚えて"],
+            answer: "燃やして"
+          }
+        ]
+      }
+    ];
+
     mockLessons.forEach(lesson => this.lessons.set(lesson.id, lesson));
+    mockQuizzes.forEach(quiz => this.quizzes.set(quiz.lessonId, quiz));
   }
 
   async getUser(id: number): Promise<User | undefined> {
