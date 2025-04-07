@@ -5,13 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Quiz } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { Progress } from "@/components/ui/progress";
 import { Check, X, Trophy, RotateCcw } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+
+// Helper function to shuffle an array (Fisher-Yates algorithm)
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
 
 export default function QuizPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -22,6 +32,8 @@ export default function QuizPage() {
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [showAnswer, setShowAnswer] = useState(false);
+  // Store shuffled options for each question
+  const [shuffledOptionsMap, setShuffledOptionsMap] = useState<Record<number, string[]>>({});
   
   const { data: quiz, isLoading } = useQuery<Quiz>({
     queryKey: [`/api/quizzes/${lessonId}`],
@@ -41,14 +53,23 @@ export default function QuizPage() {
     }
   });
 
-  // Reset states when lessonId changes (when navigating between quizzes)
+  // Initialize or reset when quiz data is loaded or lessonId changes
   useEffect(() => {
-    setCurrentQuestion(0);
-    setAnswers([]);
-    setQuizFinished(false);
-    setScore({ correct: 0, total: 0 });
-    setShowAnswer(false);
-  }, [lessonId]);
+    if (quiz) {
+      // Create shuffled options for each question
+      const shuffledOptions: Record<number, string[]> = {};
+      quiz.questions.forEach((question, index) => {
+        shuffledOptions[index] = shuffleArray(question.options);
+      });
+      
+      setShuffledOptionsMap(shuffledOptions);
+      setCurrentQuestion(0);
+      setAnswers([]);
+      setQuizFinished(false);
+      setScore({ correct: 0, total: 0 });
+      setShowAnswer(false);
+    }
+  }, [quiz, lessonId]);
 
   if (isLoading) {
     return <Skeleton className="h-[400px]" />;
@@ -118,6 +139,15 @@ export default function QuizPage() {
   };
 
   const handleRetake = () => {
+    // Reshuffle options for a new attempt
+    if (quiz) {
+      const newShuffledOptions: Record<number, string[]> = {};
+      quiz.questions.forEach((question, index) => {
+        newShuffledOptions[index] = shuffleArray(question.options);
+      });
+      setShuffledOptionsMap(newShuffledOptions);
+    }
+    
     setQuizFinished(false);
     setCurrentQuestion(0);
     setAnswers([]);
@@ -189,7 +219,8 @@ export default function QuizPage() {
           className="space-y-3"
           disabled={showAnswer}
         >
-          {question.options.map((option, i) => {
+          {/* Use the shuffled options from our map instead of the original options */}
+          {(shuffledOptionsMap[currentQuestion] || question.options).map((option, i) => {
             const isOptionCorrect = option === question.answer;
             const isSelectedIncorrect = isIncorrect && option === selectedAnswer;
             
