@@ -11,11 +11,18 @@ export default function Header() {
     <header className="border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <NavigationMenu>
-          <NavigationMenuList>
+          <NavigationMenuList className="flex items-center gap-6">
             <NavigationMenuItem>
               <Link href="/">
                 <NavigationMenuLink className="text-xl font-bold">
                   日本語 Learn
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <Link href="/grammar-quizzes">
+                <NavigationMenuLink className="text-sm">
+                  Grammar Practice
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>

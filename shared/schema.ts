@@ -23,6 +23,8 @@ export const quizzes = pgTable("quizzes", {
   id: serial("id").primaryKey(),
   lessonId: integer("lesson_id").notNull(),
   questions: jsonb("questions").notNull(),
+  // Added tags field to categorize quizzes (vocabulary, grammar, etc.)
+  tags: jsonb("tags").default([]).notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

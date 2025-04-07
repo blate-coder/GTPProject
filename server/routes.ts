@@ -30,6 +30,17 @@ export function registerRoutes(app: Express): Server {
     }
     res.json(quiz);
   });
+  
+  // Handle quiz retrieval by tags
+  app.get("/api/quizzes-by-tags/:tags", async (req, res) => {
+    const tags = req.params.tags.split(',');
+    if (!tags || tags.length === 0) {
+      return res.status(400).json({ error: "No tags provided" });
+    }
+    
+    const filteredQuizzes = await storage.getQuizzesByTags(tags);
+    res.json(filteredQuizzes);
+  });
 
   app.post("/api/progress/:userId", async (req, res) => {
     const { progress } = req.body;

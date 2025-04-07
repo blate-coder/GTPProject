@@ -8,6 +8,7 @@ import Lesson from "@/pages/lesson";
 import Quiz from "@/pages/quiz";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
+import GrammarQuizzes from "@/pages/grammar-quizzes";
 import Header from "@/components/header";
 import { AuthProvider } from "@/hooks/use-auth";
 
@@ -20,6 +21,7 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/lesson/:id" component={Lesson} />
           <Route path="/quiz/:lessonId" component={Quiz} />
+          <Route path="/grammar-quizzes" component={GrammarQuizzes} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route component={NotFound} />

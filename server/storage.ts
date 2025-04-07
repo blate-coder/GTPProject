@@ -3,7 +3,7 @@ import session from "express-session";
 import createMemoryStore from "memorystore";
 // Import lesson and quiz data from separate files
 import { getAllLessons, getLessonById } from "./data/lessons";
-import { getQuizByLessonId } from "./data/quizzes";
+import { getQuizByLessonId, quizzes } from "./data/quizzes";
 
 const MemoryStore = createMemoryStore(session);
 
@@ -14,6 +14,7 @@ export interface IStorage {
   getLessons(): Promise<Lesson[]>;
   getLesson(id: number): Promise<Lesson | undefined>;
   getQuiz(lessonId: number): Promise<Quiz | undefined>;
+  getQuizzesByTags(tags: string[]): Promise<Quiz[]>;
   updateUserProgress(userId: number, progress: Record<string, any>): Promise<void>;
   sessionStore: session.Store;
 }
@@ -61,6 +62,19 @@ export class MemStorage implements IStorage {
   async getQuiz(lessonId: number): Promise<Quiz | undefined> {
     // Get a quiz for a specific lesson from the quizzes module
     return getQuizByLessonId(lessonId);
+  }
+
+  async getQuizzesByTags(tags: string[]): Promise<Quiz[]> {
+    // Filter quizzes that have at least one of the specified tags
+    if (tags.length === 0) {
+      return quizzes; // Return all quizzes if no tags specified
+    }
+    
+    return quizzes.filter(quiz => {
+      // Access the tags property safely using type assertion
+      const quizTags = Array.isArray(quiz.tags) ? quiz.tags as string[] : [];
+      return quizTags.length > 0 && tags.some(tag => quizTags.includes(tag));
+    });
   }
 
   async updateUserProgress(userId: number, progress: Record<string, any>): Promise<void> {
