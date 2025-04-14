@@ -379,6 +379,112 @@ export const quizzes: Quiz[] = [
         answer: "Technology has both benefits and drawbacks"
       }
     ]
+  },{
+    id: 12,
+    lessonId: 12,
+    tags: ["vocabulary","full song", "weather", "emotions", "spring", "metaphors"],
+    questions: [
+      {
+        text: "What is the song comparing 'you' to in the first line?",
+        options: ["The wind", "The clouds", "The rain", "The flowers"],
+        answer: "The wind"
+      },
+      {
+        text: "What does 'ビイドロ' (びいどろ) refer to in the lyrics?",
+        options: ["Glass", "Water", "Sky", "Tears"],
+        answer: "Glass"
+      },
+      {
+        text: "What smell does the singer detect in the first part of the song?",
+        options: ["The smell of clearing weather", "The smell of flowers", "The smell of rain", "The smell of spring"],
+        answer: "The smell of clearing weather"
+      },
+      {
+        text: "What is the correct reading for '晴る'?",
+        options: ["はる", "そる", "はれる", "くもる"],
+        answer: "はる"
+      },
+      {
+        text: "In the line '晴れに晴れ 花よ咲け', what is being asked to bloom?",
+        options: ["Flowers", "Sky", "Wind", "Heart"],
+        answer: "Flowers"
+      },
+      {
+        text: "What smell does the singer detect later in the song?",
+        options: ["The smell of rain", "The smell of flowers", "The smell of spring", "The smell of the sea"],
+        answer: "The smell of rain"
+      },
+      {
+        text: "What weather phenomenon is referred to as '羊雲' (ひつじぐも)?",
+        options: ["Sheep-like clouds (cirrocumulus)", "Lightning", "Rainbow", "Fog"],
+        answer: "Sheep-like clouds (cirrocumulus)"
+      },
+      {
+        text: "What does '靡く' (なびく) mean in the context of the grass?",
+        options: ["To wave in the wind", "To grow", "To wither", "To get wet"],
+        answer: "To wave in the wind"
+      },
+      {
+        text: "What season is prominently featured in this song?",
+        options: ["Spring", "Summer", "Fall", "Winter"],
+        answer: "Spring"
+      },
+      {
+        text: "What natural element does the song suggest we should go beyond?",
+        options: ["Clouds", "Mountains", "Rivers", "Stars"],
+        answer: "Clouds"
+      },
+      {
+        text: "What are '目蓋' (まぶた) in the song?",
+        options: ["Eyelids", "Eyeballs", "Tears", "Glasses"],
+        answer: "Eyelids"
+      },
+      {
+        text: "The phrase '胸を打つ音' refers to what kind of sound?",
+        options: ["A sound that touches/moves the heart", "A drum sound", "Thunder", "Music"],
+        answer: "A sound that touches/moves the heart"
+      },
+      {
+        text: "What does '凪げ' (なげ) mean in the context of the song?",
+        options: ["To calm down", "To speed up", "To disappear", "To sing"],
+        answer: "To calm down"
+      },
+      {
+        text: "Which of these lines represents a command or request to the sky?",
+        options: ["空よ裂け", "空よ泣け", "Both 空よ裂け and 空よ泣け", "Neither 空よ裂け nor 空よ泣け"],
+        answer: "Both A and B"
+      },
+      {
+        text: "In the phrase '通り雨 草を靡かせ', what is '通り雨'?",
+        options: ["A passing shower", "Heavy rain", "A storm", "Morning dew"],
+        answer: "A passing shower"
+      },
+      {
+        text: "What poetic technique does the song use when personifying natural elements?",
+        options: ["Personification", "Simile", "Onomatopoeia", "Hyperbole"],
+        answer: "Personification"
+      },
+      {
+        text: "What feeling is conveyed by the repeated imagery of clearing weather?",
+        options: ["Hope", "Despair", "Anger", "Confusion"],
+        answer: "Hope"
+      },
+      {
+        text: "What is the grammatical structure of '咲いて春の__'?",
+        options: ["Te-form + noun + のせい (because of)", "Imperative + noun + のため (for the sake of)", "Past tense + noun + のよう (like)", "Potential form + noun + のもと (under)"],
+        answer: "Te-form + noun + のせい (because of)"
+      },
+      {
+        text: "The word '遠く' appears repeatedly at the end of stanzas. What does it mean?",
+        options: ["Far away", "Nearby", "Quickly", "Slowly"],
+        answer: "Far away"
+      },
+      {
+        text: "What is the main contrast presented throughout the song?",
+        options: ["Clear weather and rain", "Spring and winter", "Near and far", "Life and death"],
+        answer: "Clear weather and rain"
+      }
+    ]
   }
 ];
 

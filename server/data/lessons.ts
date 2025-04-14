@@ -486,6 +486,247 @@ export const lessons: Lesson[] = [
       ]
     },
     difficulty: "advanced"
+  },{
+    id: 12,
+    title: "晴る (Haru) - Yorushika",
+    description: "Learn Japanese through this poetic song by Yorushika about weather, emotions, and the coming of spring",
+    type: "song",
+    mediaUrl: "https://www.youtube.com/embed/CkvWJNt77mU?si=lzlYMKolhJ2lB68i",
+    content: {
+      lyrics: "貴方は風のように\n目を閉じては夕暮れ\n何を思っているんだろうか\n目蓋を開いていた\n貴方の目はビイドロ\n少しだけ晴るの匂いがした\n晴れに晴れ 花よ咲け\n咲いて晴るのせい\n降り止めば雨でさえ\n貴方を飾る晴る\n胸を打つ音よ凪げ\n僕ら晴る風\nあの雲も越えてゆけ\n遠くまだ遠くまで\n貴方は晴れ模様に\n目を閉じては青色\n何が悲しいのだろうか\n目蓋を開いている\n貴方の目にビイドロ\n今少し雨の匂いがした\n泣きに泣け 空よ泣け\n泣いて雨のせい\n降り頻る雨でさえ\n雲の上では晴る\n土を打つ音よ鳴れ\n僕ら春荒れ\nあの海も越えてゆく\n遠くまだ遠くまで\n通り雨 草を靡かせ\n羊雲 あれも春のせい\n風のよう 胸に春乗せ\n晴るを待つ\n晴れに晴れ 空よ裂け\n裂いて春のせい\n降り止めば雨でさえ\n貴方を飾る晴る\n胸を打つ音奏で\n僕ら春風\n音に聞く晴るの風\nさぁこの歌よ凪げ！\n晴れに晴れ 花よ咲け\n咲いて春のせい\nあの雲も越えてゆけ\n遠くまだ遠くまで",
+      translation: "You are like the wind\nClosing your eyes at dusk\nWhat are you thinking about?\nYour eyelids were open\nYour eyes are like glass\nI could smell a little of clearing weather\nClear up, clear up, flowers bloom\nBlooming because of the clearing weather\nEven the rain when it stops\nThe clear weather adorns you\nThe sound that strikes the heart, calm down\nWe are the clearing wind\nLet's go beyond those clouds\nTo far, still far away\n\nYou are in a clear pattern\nClosing your eyes to blue\nWhat could be sad?\nWith your eyelids open\nGlass in your eyes\nNow I smelled a little rain\nCry and cry, sky cry\nCrying because of the rain\nEven the frequently falling rain\nAbove the clouds it's clear\nSound striking the earth, ring out\nWe are the spring storm\nWe'll cross that sea too\nTo far, still far away\n\nA passing shower, bending the grass\nSheep-like clouds, that too is because of spring\nLike the wind, spring riding on our hearts\nWaiting for the weather to clear\nClear up, clear up, sky break open\nBreaking open because of spring\nEven the rain when it stops\nThe clear weather adorns you\nPlaying the sound that strikes the heart\nWe are the spring breeze\nHearing the sound of the clearing wind\nCome on, let this song calm down!\nClear up, clear up, flowers bloom\nBlooming because of spring\nLet's go beyond those clouds\nTo far, still far away",
+      vocabulary: [
+        {
+          word: "貴方",
+          reading: "あなた",
+          meaning: "You",
+          example: "貴方はどこから来ましたか？ - Where did you come from?"
+        },
+        {
+          word: "風",
+          reading: "かぜ",
+          meaning: "Wind",
+          example: "強い風が吹いている - A strong wind is blowing"
+        },
+        {
+          word: "目を閉じる",
+          reading: "めをとじる",
+          meaning: "To close one's eyes",
+          example: "瞑想するときは目を閉じます - Close your eyes when you meditate"
+        },
+        {
+          word: "夕暮れ",
+          reading: "ゆうぐれ",
+          meaning: "Dusk, twilight",
+          example: "夕暮れ時の空は美しい - The sky at dusk is beautiful"
+        },
+        {
+          word: "思う",
+          reading: "おもう",
+          meaning: "To think, to feel",
+          example: "あなたのことを思っています - I am thinking of you"
+        },
+        {
+          word: "目蓋",
+          reading: "まぶた",
+          meaning: "Eyelid",
+          example: "疲れると目蓋が重くなる - When tired, eyelids become heavy"
+        },
+        {
+          word: "ビイドロ",
+          reading: "びいどろ",
+          meaning: "Glass (old Japanese word from Portuguese 'vidro')",
+          example: "ビイドロのような透明な水 - Water as transparent as glass"
+        },
+        {
+          word: "匂い",
+          reading: "におい",
+          meaning: "Smell, scent",
+          example: "花の匂いがする - There is a smell of flowers"
+        },
+        {
+          word: "晴れる",
+          reading: "はれる",
+          meaning: "To clear up (weather)",
+          example: "雨が止んで空が晴れる - The rain stops and the sky clears"
+        },
+        {
+          word: "晴る",
+          reading: "はる",
+          meaning: "To clear up (poetic form used in this song)",
+          example: "空が晴るのを待つ - Waiting for the sky to clear"
+        },
+        {
+          word: "花",
+          reading: "はな",
+          meaning: "Flower",
+          example: "春になると花が咲く - Flowers bloom when spring comes"
+        },
+        {
+          word: "咲く",
+          reading: "さく",
+          meaning: "To bloom",
+          example: "桜が咲いている - The cherry blossoms are blooming"
+        },
+        {
+          word: "降り止む",
+          reading: "ふりやむ",
+          meaning: "To stop falling (rain/snow)",
+          example: "雨が降り止んだ - The rain has stopped"
+        },
+        {
+          word: "飾る",
+          reading: "かざる",
+          meaning: "To decorate, to adorn",
+          example: "部屋を花で飾る - To decorate a room with flowers"
+        },
+        {
+          word: "胸を打つ",
+          reading: "むねをうつ",
+          meaning: "To touch one's heart, to be moving",
+          example: "彼の話は胸を打った - His story was moving"
+        },
+        {
+          word: "凪ぐ",
+          reading: "なぐ",
+          meaning: "To become calm (wind/waves)",
+          example: "風が凪いだ - The wind has calmed down"
+        },
+        {
+          word: "雲",
+          reading: "くも",
+          meaning: "Cloud",
+          example: "雲が空を覆っている - Clouds are covering the sky"
+        },
+        {
+          word: "越える",
+          reading: "こえる",
+          meaning: "To cross over, to go beyond",
+          example: "山を越える - To cross over a mountain"
+        },
+        {
+          word: "遠く",
+          reading: "とおく",
+          meaning: "Far away, distance",
+          example: "遠くに行く - To go far away"
+        },
+        {
+          word: "晴れ模様",
+          reading: "はれもよう",
+          meaning: "Clear weather pattern",
+          example: "今日は晴れ模様だ - Today has a clear weather pattern"
+        },
+        {
+          word: "青色",
+          reading: "あおいろ",
+          meaning: "Blue color",
+          example: "空は青色だ - The sky is blue"
+        },
+        {
+          word: "悲しい",
+          reading: "かなしい",
+          meaning: "Sad",
+          example: "悲しい気持ち - Sad feeling"
+        },
+        {
+          word: "泣く",
+          reading: "なく",
+          meaning: "To cry",
+          example: "子供が泣いている - The child is crying"
+        },
+        {
+          word: "降り頻る",
+          reading: "ふりしきる",
+          meaning: "To fall heavily (rain/snow)",
+          example: "雨が降り頻る - Rain falls heavily"
+        },
+        {
+          word: "土",
+          reading: "つち",
+          meaning: "Earth, soil",
+          example: "肥沃な土 - Fertile soil"
+        },
+        {
+          word: "鳴る",
+          reading: "なる",
+          meaning: "To sound, to ring",
+          example: "鐘が鳴る - The bell rings"
+        },
+        {
+          word: "春荒れ",
+          reading: "はるあれ",
+          meaning: "Spring storm",
+          example: "春荒れの季節 - The season of spring storms"
+        },
+        {
+          word: "海",
+          reading: "うみ",
+          meaning: "Sea, ocean",
+          example: "広い海 - Vast ocean"
+        },
+        {
+          word: "通り雨",
+          reading: "とおりあめ",
+          meaning: "Passing shower",
+          example: "通り雨で少し濡れた - Got a little wet in a passing shower"
+        },
+        {
+          word: "草",
+          reading: "くさ",
+          meaning: "Grass",
+          example: "草が茂っている - The grass is thick"
+        },
+        {
+          word: "靡く",
+          reading: "なびく",
+          meaning: "To wave, to flutter (in wind)",
+          example: "風に靡く旗 - Flag fluttering in the wind"
+        },
+        {
+          word: "羊雲",
+          reading: "ひつじぐも",
+          meaning: "Cirrocumulus clouds (sheep-like clouds)",
+          example: "空に羊雲が浮かんでいる - Sheep-like clouds are floating in the sky"
+        },
+        {
+          word: "春",
+          reading: "はる",
+          meaning: "Spring",
+          example: "春が来た - Spring has come"
+        },
+        {
+          word: "乗せる",
+          reading: "のせる",
+          meaning: "To place on, to carry",
+          example: "希望を胸に乗せる - To carry hope in one's heart"
+        },
+        {
+          word: "待つ",
+          reading: "まつ",
+          meaning: "To wait",
+          example: "友達を待つ - To wait for a friend"
+        },
+        {
+          word: "裂ける",
+          reading: "さける",
+          meaning: "To tear, to split open",
+          example: "布が裂ける - The cloth tears"
+        },
+        {
+          word: "奏でる",
+          reading: "かなでる",
+          meaning: "To play (music)",
+          example: "ピアノを奏でる - To play the piano"
+        },
+        {
+          word: "春風",
+          reading: "はるかぜ",
+          meaning: "Spring breeze",
+          example: "春風が頬を撫でる - Spring breeze caresses the cheek"
+        }
+      ]
+    },
+    difficulty: "advanced"
   }
 ];
 

@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -7,6 +7,16 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   progress: jsonb("progress").default({}).notNull(),
+});
+
+export const scores = pgTable("scores", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  quizId: integer("quiz_id").notNull().references(() => quizzes.id),
+  score: integer("score").notNull(),
+  maxScore: integer("max_score").notNull(),
+  percentage: real("percentage").notNull(),
+  completedAt: timestamp("completed_at").defaultNow().notNull(),
 });
 
 export const lessons = pgTable("lessons", {
@@ -35,7 +45,14 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertLessonSchema = createInsertSchema(lessons);
 export const insertQuizSchema = createInsertSchema(quizzes);
 
+export const insertScoreSchema = createInsertSchema(scores).omit({ 
+  id: true, 
+  completedAt: true 
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type InsertScore = z.infer<typeof insertScoreSchema>;
 export type User = typeof users.$inferSelect;
 export type Lesson = typeof lessons.$inferSelect;
 export type Quiz = typeof quizzes.$inferSelect;
+export type Score = typeof scores.$inferSelect;
