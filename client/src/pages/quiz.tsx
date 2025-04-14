@@ -52,6 +52,18 @@ export default function QuizPage() {
       });
     }
   });
+  
+  const recordScoreMutation = useMutation({
+    mutationFn: async (scoreData: { quizId: number; score: number; maxScore: number; }) => {
+      const res = await apiRequest("POST", "/api/scores", scoreData);
+      return await res.json();
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh analytics
+      queryClient.invalidateQueries({ queryKey: ["/api/scores"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/scores/analytics"] });
+    }
+  });
 
   // Initialize or reset when quiz data is loaded or lessonId changes
   useEffect(() => {

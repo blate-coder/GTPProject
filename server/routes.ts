@@ -48,6 +48,61 @@ export function registerRoutes(app: Express): Server {
     res.json({ success: true });
   });
 
+  // Score recording route
+  app.post("/api/scores", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    try {
+      const scoreData = {
+        userId: req.user.id,
+        quizId: req.body.quizId,
+        score: req.body.score,
+        maxScore: req.body.maxScore,
+        percentage: (req.body.score / req.body.maxScore) * 100,
+      };
+
+      const score = await storage.recordScore(scoreData);
+      res.status(201).json(score);
+    } catch (error) {
+      res.status(400).json({ error: "Invalid score data" });
+    }
+  });
+
+  // Get all scores for a user
+  app.get("/api/scores", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const scores = await storage.getUserScores(req.user.id);
+    res.json(scores);
+  });
+
+  // Get scores for a specific quiz
+  app.get("/api/scores/quiz/:quizId", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const scores = await storage.getUserScoresByQuiz(
+      req.user.id,
+      parseInt(req.params.quizId)
+    );
+    res.json(scores);
+  });
+
+  // Get score analytics
+  app.get("/api/scores/analytics", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const analytics = await storage.getScoreAnalytics(req.user.id);
+    res.json(analytics);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

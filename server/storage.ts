@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser, type Lesson, type Quiz } from "@shared/schema";
+import { users, type User, type InsertUser, type Lesson, type Quiz, type Score, type InsertScore } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 // Import lesson and quiz data from separate files
@@ -16,17 +16,31 @@ export interface IStorage {
   getQuiz(lessonId: number): Promise<Quiz | undefined>;
   getQuizzesByTags(tags: string[]): Promise<Quiz[]>;
   updateUserProgress(userId: number, progress: Record<string, any>): Promise<void>;
+  recordScore(score: InsertScore): Promise<Score>;
+  getUserScores(userId: number): Promise<Score[]>;
+  getUserScoresByQuiz(userId: number, quizId: number): Promise<Score[]>;
+  getScoreAnalytics(userId: number): Promise<{
+    totalQuizzesTaken: number;
+    averageScore: number;
+    bestScore: Score | null;
+    recentScores: Score[];
+    scoresByCategory: Record<string, {count: number, avgScore: number}>;
+  }>;
   sessionStore: session.Store;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
+  private scores: Map<number, Score>;
   private currentId: number;
+  private currentScoreId: number;
   readonly sessionStore: session.Store;
 
   constructor() {
     this.users = new Map();
+    this.scores = new Map();
     this.currentId = 1;
+    this.currentScoreId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
     });
@@ -82,6 +96,90 @@ export class MemStorage implements IStorage {
     if (user) {
       this.users.set(userId, { ...user, progress });
     }
+  }
+
+  async recordScore(score: InsertScore): Promise<Score> {
+    const id = this.currentScoreId++;
+    const now = new Date();
+    const newScore: Score = {
+      ...score,
+      id,
+      completedAt: now
+    };
+    this.scores.set(id, newScore);
+    return newScore;
+  }
+
+  async getUserScores(userId: number): Promise<Score[]> {
+    return Array.from(this.scores.values())
+      .filter(score => score.userId === userId)
+      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+  }
+
+  async getUserScoresByQuiz(userId: number, quizId: number): Promise<Score[]> {
+    return Array.from(this.scores.values())
+      .filter(score => score.userId === userId && score.quizId === quizId)
+      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+  }
+
+  async getScoreAnalytics(userId: number): Promise<{
+    totalQuizzesTaken: number;
+    averageScore: number;
+    bestScore: Score | null;
+    recentScores: Score[];
+    scoresByCategory: Record<string, {count: number, avgScore: number}>;
+  }> {
+    const userScores = await this.getUserScores(userId);
+    
+    if (userScores.length === 0) {
+      return {
+        totalQuizzesTaken: 0,
+        averageScore: 0,
+        bestScore: null,
+        recentScores: [],
+        scoresByCategory: {}
+      };
+    }
+
+    // Calculate analytics
+    const totalQuizzesTaken = userScores.length;
+    const averageScore = userScores.reduce((sum, score) => sum + score.percentage, 0) / totalQuizzesTaken;
+    
+    // Find best score
+    const bestScore = userScores.reduce((best, current) => 
+      !best || current.percentage > best.percentage ? current : best, null as Score | null);
+    
+    // Get recent scores (last 5)
+    const recentScores = userScores.slice(0, 5);
+    
+    // Calculate scores by category (tags)
+    const scoresByCategory: Record<string, {count: number, avgScore: number}> = {};
+    
+    // We need to look up quiz data to get tags
+    for (const score of userScores) {
+      const quiz = await this.getQuiz(score.quizId);
+      if (quiz && Array.isArray(quiz.tags)) {
+        for (const tag of quiz.tags as string[]) {
+          if (!scoresByCategory[tag]) {
+            scoresByCategory[tag] = { count: 0, avgScore: 0 };
+          }
+          
+          // Update running average
+          const current = scoresByCategory[tag];
+          current.avgScore = (current.avgScore * current.count + score.percentage) / (current.count + 1);
+          current.count++;
+          scoresByCategory[tag] = current;
+        }
+      }
+    }
+    
+    return {
+      totalQuizzesTaken,
+      averageScore,
+      bestScore,
+      recentScores,
+      scoresByCategory
+    };
   }
 }
 
