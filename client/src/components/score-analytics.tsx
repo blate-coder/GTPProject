@@ -186,14 +186,23 @@ export default function ScoreAnalytics() {
             <CardContent>
               {Object.keys(analytics.scoresByCategory).length > 0 ? (
                 <div className="h-[300px]">
-                  <BarChart
-                    data={categoryData}
-                    index="name"
-                    categories={["value"]}
-                    colors={["blue"]}
-                    valueFormatter={(value) => `${Math.round(value)}%`}
-                    yAxisWidth={40}
-                  />
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsBarChart
+                      data={categoryData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis 
+                        domain={[0, 100]} 
+                        tickFormatter={(value: number) => `${value}%`}
+                      />
+                      <Tooltip 
+                        formatter={(value: number) => [`${Math.round(Number(value))}%`, 'Score']}
+                      />
+                      <Bar dataKey="value" fill="#3b82f6" name="Score" />
+                    </RechartsBarChart>
+                  </ResponsiveContainer>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-[200px] text-muted-foreground">
@@ -215,14 +224,29 @@ export default function ScoreAnalytics() {
             <CardContent>
               {timelineData.length > 1 ? (
                 <div className="h-[300px]">
-                  <AreaChart
-                    data={timelineData}
-                    index="name"
-                    categories={["value"]}
-                    colors={["blue"]}
-                    valueFormatter={(value) => `${Math.round(value)}%`}
-                    yAxisWidth={40}
-                  />
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsAreaChart
+                      data={timelineData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis 
+                        domain={[0, 100]} 
+                        tickFormatter={(value: number) => `${value}%`}
+                      />
+                      <Tooltip 
+                        formatter={(value: number) => [`${Math.round(Number(value))}%`, 'Score']}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="value" 
+                        fill="#3b82f6" 
+                        stroke="#3b82f6" 
+                        name="Score" 
+                      />
+                    </RechartsAreaChart>
+                  </ResponsiveContainer>
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-[200px] text-muted-foreground">
@@ -265,9 +289,16 @@ export default function ScoreAnalytics() {
                           {score.score} / {score.maxScore}
                         </div>
                         <Badge
+                          className={
+                            score.percentage >= 80
+                              ? "bg-green-500 hover:bg-green-600"
+                              : score.percentage >= 60
+                              ? ""
+                              : ""
+                          }
                           variant={
                             score.percentage >= 80
-                              ? "success"
+                              ? "default"
                               : score.percentage >= 60
                               ? "default"
                               : "destructive"
