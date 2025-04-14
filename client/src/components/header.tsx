@@ -2,7 +2,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, BarChart2 } from "lucide-react";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -26,6 +26,16 @@ export default function Header() {
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
+            {user && (
+              <NavigationMenuItem>
+                <Link href="/analytics">
+                  <NavigationMenuLink className="text-sm flex items-center">
+                    <BarChart2 className="h-4 w-4 mr-1" />
+                    My Analytics
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            )}
           </NavigationMenuList>
         </NavigationMenu>
 

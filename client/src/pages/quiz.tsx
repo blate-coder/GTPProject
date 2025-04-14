@@ -146,6 +146,13 @@ export default function QuizPage() {
         };
         
         updateProgressMutation.mutate(progressData);
+        
+        // Record the score for analytics
+        recordScoreMutation.mutate({
+          quizId: parseInt(lessonId),
+          score: finalScore.correct,
+          maxScore: finalScore.total
+        });
       }
     }
   };
