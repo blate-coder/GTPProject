@@ -7,7 +7,7 @@ export const lessons: Lesson[] = [
     title: "Gurenge - Demon Slayer OP",
     description: "Learn Japanese with the opening theme of Demon Slayer",
     type: "song",
-    mediaUrl: "https://example.com/gurenge.mp4",
+    mediaUrl: "https://www.youtube.com/embed/pmanD_s7G3U?si=lbQnY9O6gOun8uXj",
     content: {
       lyrics: "赫く尊き 永久の盾よ\n命を燃やして 護りし者よ\n鬼を祓いて 済ませぬまま\n今日も陽は落ちて 朱く染まる",
       translation: "Oh crimson shield, noble and eternal\nThose who burned their lives to protect\nUnable to completely exorcise the demons\nToday again the sun sets, dyed in crimson",
@@ -39,7 +39,7 @@ export const lessons: Lesson[] = [
     title: "Lemon - Kenshi Yonezu",
     description: "Learn Japanese with this emotional hit song by Kenshi Yonezu",
     type: "song",
-    mediaUrl: "https://example.com/lemon.mp4",
+    mediaUrl: "https://www.youtube.com/embed/SX_ViT4Ra7k?si=_ZeGQWX12vhXDBMr",
     content: {
       lyrics: "夢ならばどれほどよかったでしょう\n未だにあなたのことを夢にみる\n忘れた物を取りに帰るように\n古びた思い出の埃を払う",
       translation: "How wonderful would it be if this were just a dream\nI still see you in my dreams\nLike going back to retrieve something forgotten\nI dust off the old memories",
@@ -76,7 +76,7 @@ export const lessons: Lesson[] = [
     title: "Yoru ni Kakeru - YOASOBI",
     description: "Learn Japanese with this popular song by YOASOBI",
     type: "song",
-    mediaUrl: "https://example.com/yorunikakeru.mp4",
+    mediaUrl: "https://www.youtube.com/embed/x8VYWazR5mE?si=TYOuQU1RBOjbvYN0",
     content: {
       lyrics: "夜に駆けるのは\n決まって決まってひとりきり\nそんな風に思っていた\nその頃の僕らは",
       translation: "The one who runs through the night\nIs always, always all alone\nThat's what I thought\nBack when we were young",
@@ -113,7 +113,7 @@ export const lessons: Lesson[] = [
     title: "Aitai - Suda Masaki",
     description: "Learn Japanese with this touching song by Suda Masaki",
     type: "song",
-    mediaUrl: "https://example.com/aitai.mp4",
+    mediaUrl: "https://www.youtube.com/embed/QO0B1z7-c0A?si=c26h_lfJLJGJy5GN",
     content: {
       lyrics: "今も変わらずあなたを好きでいることを\n伝えたいけれど伝えられなくて\n今もこうして一人さみしく歩くこの道\nあの日のように雨が降り出した",
       translation: "I want to tell you that my feelings for you haven't changed\nBut I can't convey these feelings\nEven now I walk this lonely road by myself\nAnd just like that day, it started to rain",
@@ -150,7 +150,7 @@ export const lessons: Lesson[] = [
     title: "Your Name (Kimi no Na wa) - Opening Scene",
     description: "Learn Japanese with this popular anime movie by Makoto Shinkai",
     type: "anime",
-    mediaUrl: "https://example.com/yourname.mp4",
+    mediaUrl: "https://www.youtube.com/embed/pLg9fHlZqMg?si=eXf_sL3wPQilfpVS",
     content: {
       lyrics: "誰かの名前を呼んでいた\n記憶の中の遥か奥で\nもう一度だけ会いたかった",
       translation: "I was calling someone's name\nDeep within my memories\nI wanted to meet them just one more time",
@@ -193,7 +193,7 @@ export const lessons: Lesson[] = [
     title: "Hikaru Nara - Goose House",
     description: "Learn Japanese grammar with this popular song from Your Lie in April",
     type: "song",
-    mediaUrl: "https://example.com/hikarunara.mp4",
+    mediaUrl: "https://www.youtube.com/embed/p5kc8hJ3GcA?si=k0XQXxrbvhJMZB3H",
     content: {
       lyrics: "喜びと悲しみの\n雫が光るなら\n君のもとへ駆けていくよ\n全てをあげるよ\n\n目を閉じれば\n移ろう景色の中で\n君が指をさし示した光が\nまだ僕を照らしてる",
       translation: "If the droplets of joy and sorrow\nWere to shine\nI would run to where you are\nI would give you everything\n\nWhen I close my eyes\nAmidst the ever-changing scenery\nThe light that you pointed to\nStill illuminates me",
