@@ -6,6 +6,13 @@ import { useEffect } from "react";
 
 export default function AnalyticsPage() {
   const { user, isLoading } = useAuth();
+  const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      setLocation("/login");
+    }
+  }, [user, isLoading, setLocation]);
 
   if (isLoading) {
     return (
@@ -16,7 +23,7 @@ export default function AnalyticsPage() {
   }
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return null; // Will redirect via useEffect
   }
 
   return (
