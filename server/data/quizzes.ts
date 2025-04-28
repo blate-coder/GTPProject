@@ -8,29 +8,29 @@ export const quizzes: Quiz[] = [
     tags: ["vocabulary"],
     questions: [
       {
-        text: "What does '赫く' (あかく) mean?",
-        options: ["Crimson/bright red", "Blue", "Green", "Yellow"],
-        answer: "Crimson/bright red"
+        text: "What does '泥だらけ' mean?",
+        options: ["Covered in mud", "Covered in snow", "Covered in water", "Covered in dust"],
+        answer: "Covered in mud"
       },
       {
-        text: "What does '尊き' (とうとき) mean?",
-        options: ["Noble/sacred", "Fast", "Slow", "Heavy"],
-        answer: "Noble/sacred"
+        text: "What does '走馬灯' (そうまとう) mean?",
+        options: ["Lantern parade", "Street light", "Firefly", "Candlelight"],
+        answer: "Lantern parade"
       },
       {
-        text: "What is the correct reading for '護りし'?",
-        options: ["まもりし", "かまりし", "たもりし", "はもりし"],
-        answer: "まもりし"
+        text: "What is the meaning of 'こわばる'?",
+        options: ["To become stiff", "To become soft", "To become warm", "To become cold"],
+        answer: "To become stiff"
       },
       {
-        text: "What is the Japanese word for 'crimson'?",
-        options: ["赫く", "尊き", "永久", "朱く"],
-        answer: "赫く"
+        text: "Complete the lyric: '震える手は_____ものがある'",
+        options: ["掴みたい", "見たい", "聞きたい", "話したい"],
+        answer: "掴みたい"
       },
       {
-        text: "Complete the lyric: '命を_____ 護りし者よ'",
-        options: ["燃やして", "壊して", "忘れて", "覚えて"],
-        answer: "燃やして"
+        text: "What is the meaning of '空睨んでも'?",
+        options: ["Even if I glare at the sky", "Even if I look up", "Even if I smile", "Even if I cry"],
+        answer: "Even if I glare at the sky"
       }
     ]
   },{
