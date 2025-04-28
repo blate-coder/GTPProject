@@ -9,8 +9,8 @@ export const lessons: Lesson[] = [
     type: "song",
     mediaUrl: "https://www.youtube.com/embed/pmanD_s7G3U?si=lbQnY9O6gOun8uXj",
     content: {
-      lyrics: "赫く尊き 永久の盾よ\n命を燃やして 護りし者よ\n鬼を祓いて 済ませぬまま\n今日も陽は落ちて 朱く染まる",
-      translation: "Oh crimson shield, noble and eternal\nThose who burned their lives to protect\nUnable to completely exorcise the demons\nToday again the sun sets, dyed in crimson",
+      lyrics: "泥だらけの走馬灯に酔う こわばる心\n震える手は掴みたいものがある それだけさ\n夜の匂いに (I'll spend all thirty nights)\n空睨んでも (Staring into the sky)\n変わっていけるのは自分自身だけ それだけさ",
+      translation: "Getting drunk on the mud-stained revolving lantern of memories, my stiffening heart\nMy trembling hand wants to grasp something, that's all\nIn the smell of the night (I'll spend all thirty nights)\nEven if I stare at the sky (Staring into the sky)\nOnly I can change myself, that's all",
       vocabulary: [
         {
           word: "赫く",
