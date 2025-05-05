@@ -91,7 +91,7 @@ export default function GrammarQuizzes() {
           </Button>
         </Link>
         <h1 className="text-3xl font-bold">
-          {selectedTab.charAt(0).toUpperCase() + selectedTab.slice(1)} Practice
+          Categories
         </h1>
       </div>
 
