@@ -111,14 +111,23 @@ export class MemStorage implements IStorage {
   }
 
   async getUserScores(userId: number): Promise<Score[]> {
-    return Array.from(this.scores.values())
-      .filter(score => score.userId === userId)
-      .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+    const allScores = Array.from(this.scores.values());
+    const userScores = allScores.filter(score => score.userId === userId);
+    
+    // Clear any existing scores when user logs in for the first time
+    if (userScores.length === 0) {
+      // Remove all previous scores for this user
+      Array.from(this.scores.entries())
+        .filter(([_, score]) => score.userId === userId)
+        .forEach(([id, _]) => this.scores.delete(id));
+    }
+    
+    return userScores.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
   }
 
   async getUserScoresByQuiz(userId: number, quizId: number): Promise<Score[]> {
-    return Array.from(this.scores.values())
-      .filter(score => score.userId === userId && score.quizId === quizId)
+    const userScores = await this.getUserScores(userId);
+    return userScores.filter(score => score.quizId === quizId)
       .sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
   }
 
