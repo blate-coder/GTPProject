@@ -83,7 +83,7 @@ export class MemStorage implements IStorage {
     if (tags.length === 0) {
       return quizzes; // Return all quizzes if no tags specified
     }
-    
+
     return quizzes.filter(quiz => {
       // Access the tags property safely using type assertion
       const quizTags = Array.isArray(quiz.tags) ? quiz.tags as string[] : [];
@@ -130,7 +130,7 @@ export class MemStorage implements IStorage {
     scoresByCategory: Record<string, {count: number, avgScore: number}>;
   }> {
     const userScores = await this.getUserScores(userId);
-    
+
     if (userScores.length === 0) {
       return {
         totalQuizzesTaken: 0,
@@ -144,17 +144,17 @@ export class MemStorage implements IStorage {
     // Calculate analytics
     const totalQuizzesTaken = userScores.length;
     const averageScore = userScores.reduce((sum, score) => sum + score.percentage, 0) / totalQuizzesTaken;
-    
+
     // Find best score
     const bestScore = userScores.reduce((best, current) => 
       !best || current.percentage > best.percentage ? current : best, null as Score | null);
-    
+
     // Get recent scores (last 5)
     const recentScores = userScores.slice(0, 5);
-    
+
     // Calculate scores by category (tags)
     const scoresByCategory: Record<string, {count: number, avgScore: number}> = {};
-    
+
     // We need to look up quiz data to get tags
     for (const score of userScores) {
       const quiz = await this.getQuiz(score.quizId);
@@ -163,7 +163,7 @@ export class MemStorage implements IStorage {
           if (!scoresByCategory[tag]) {
             scoresByCategory[tag] = { count: 0, avgScore: 0 };
           }
-          
+
           // Update running average
           const current = scoresByCategory[tag];
           current.avgScore = (current.avgScore * current.count + score.percentage) / (current.count + 1);
@@ -172,7 +172,7 @@ export class MemStorage implements IStorage {
         }
       }
     }
-    
+
     return {
       totalQuizzesTaken,
       averageScore,
