@@ -421,14 +421,16 @@ export class MemStorage implements IStorage {
     
     if (meetsScoreRequirement && meetsLessonRequirement && canAfford) {
       // Deduct tokens
-      await this.updateUserTokens(userId, -(customization.tokenCost || 0));
+      const tokenCost = customization.tokenCost || 0;
+      const newBalance = Math.max(0, (user.tokens || 0) - tokenCost);
       
       // Add to user's unlocked customizations
       const newUnlockedCustomizations = [...unlockedCustomizations, customization.name];
       
-      // Update user
+      // Update user with both new token balance and unlocked customizations
       this.users.set(userId, {
         ...user, 
+        tokens: newBalance,
         unlockedCustomizations: newUnlockedCustomizations
       });
       

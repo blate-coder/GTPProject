@@ -178,6 +178,20 @@ export default function ProfilePage() {
                                     <Badge variant="outline" className="flex items-center gap-1">
                                       <Coins className="h-3 w-3" /> {avatar.tokenCost}
                                     </Badge>
+                                    
+                                    {/* Show requirements */}
+                                    {avatar.requiredScore && avatar.requiredScore > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required score: {avatar.requiredScore}%
+                                      </p>
+                                    )}
+                                    
+                                    {Array.isArray(avatar.requiredLessons) && avatar.requiredLessons.length > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required lessons: {avatar.requiredLessons.join(', ')}
+                                      </p>
+                                    )}
+                                    
                                     <Button 
                                       size="sm" 
                                       className="mt-2 w-full"
@@ -185,11 +199,12 @@ export default function ProfilePage() {
                                         e.stopPropagation();
                                         handlePurchase(avatar.id);
                                       }}
-                                      disabled={purchaseMutation.isPending}
+                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < avatar.tokenCost}
                                     >
                                       {purchaseMutation.isPending ? (
                                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : 'Buy'}
+                                      ) : (user?.tokens || 0) < avatar.tokenCost ? 
+                                        'Not enough tokens' : 'Buy'}
                                     </Button>
                                   </div>
                                 )}
@@ -234,6 +249,20 @@ export default function ProfilePage() {
                                     <Badge variant="outline" className="flex items-center gap-1">
                                       <Coins className="h-3 w-3" /> {badge.tokenCost}
                                     </Badge>
+                                    
+                                    {/* Show requirements */}
+                                    {badge.requiredScore > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required score: {badge.requiredScore}%
+                                      </p>
+                                    )}
+                                    
+                                    {Array.isArray(badge.requiredLessons) && badge.requiredLessons.length > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required lessons: {badge.requiredLessons.join(', ')}
+                                      </p>
+                                    )}
+                                    
                                     <Button 
                                       size="sm" 
                                       className="mt-2 w-full"
@@ -241,11 +270,12 @@ export default function ProfilePage() {
                                         e.stopPropagation();
                                         handlePurchase(badge.id);
                                       }}
-                                      disabled={purchaseMutation.isPending}
+                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < badge.tokenCost}
                                     >
                                       {purchaseMutation.isPending ? (
                                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : 'Buy'}
+                                      ) : (user?.tokens || 0) < badge.tokenCost ? 
+                                        'Not enough tokens' : 'Buy'}
                                     </Button>
                                   </div>
                                 )}
