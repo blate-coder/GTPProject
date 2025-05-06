@@ -251,7 +251,7 @@ export default function ProfilePage() {
                                     </Badge>
                                     
                                     {/* Show requirements */}
-                                    {badge.requiredScore > 0 && (
+                                    {badge.requiredScore && badge.requiredScore > 0 && (
                                       <p className="text-xs text-muted-foreground mt-1">
                                         Required score: {badge.requiredScore}%
                                       </p>
@@ -326,6 +326,20 @@ export default function ProfilePage() {
                                     <Badge variant="outline" className="flex items-center gap-1">
                                       <Coins className="h-3 w-3" /> {theme.tokenCost}
                                     </Badge>
+                                    
+                                    {/* Show requirements */}
+                                    {theme.requiredScore && theme.requiredScore > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required score: {theme.requiredScore}%
+                                      </p>
+                                    )}
+                                    
+                                    {Array.isArray(theme.requiredLessons) && theme.requiredLessons.length > 0 && (
+                                      <p className="text-xs text-muted-foreground mt-1">
+                                        Required lessons: {theme.requiredLessons.join(', ')}
+                                      </p>
+                                    )}
+                                    
                                     <Button 
                                       size="sm" 
                                       className="mt-2 w-full"
@@ -333,11 +347,12 @@ export default function ProfilePage() {
                                         e.stopPropagation();
                                         handlePurchase(theme.id);
                                       }}
-                                      disabled={purchaseMutation.isPending}
+                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < theme.tokenCost}
                                     >
                                       {purchaseMutation.isPending ? (
                                         <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : 'Buy'}
+                                      ) : (user?.tokens || 0) < theme.tokenCost ? 
+                                        'Not enough tokens' : 'Buy'}
                                     </Button>
                                   </div>
                                 )}
