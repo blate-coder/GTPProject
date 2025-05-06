@@ -344,6 +344,159 @@ export class MemStorage implements IStorage {
       scoresByCategory
     };
   }
+  
+  // Customization management methods
+  async getCustomizations(): Promise<Customization[]> {
+    return Array.from(this.customizations.values());
+  }
+  
+  async getCustomization(id: number): Promise<Customization | undefined> {
+    return this.customizations.get(id);
+  }
+  
+  async getCustomizationByName(name: string): Promise<Customization | undefined> {
+    return Array.from(this.customizations.values()).find(c => c.name === name);
+  }
+  
+  async purchaseCustomization(userId: number, customizationId: number): Promise<boolean> {
+    const user = await this.getUser(userId);
+    const customization = await this.getCustomization(customizationId);
+    
+    if (!user || !customization) {
+      return false;
+    }
+    
+    // Check if user already has this customization
+    const unlockedCustomizations = Array.isArray(user.unlockedCustomizations) 
+      ? user.unlockedCustomizations as string[] 
+      : [];
+      
+    if (unlockedCustomizations.includes(customization.name)) {
+      return true; // Already purchased
+    }
+    
+    // Check if user meets the requirements
+    const userScores = await this.getUserScores(userId);
+    const highestScore = userScores.length > 0 
+      ? Math.max(...userScores.map(s => s.percentage)) 
+      : 0;
+      
+    const meetsScoreRequirement = highestScore >= (customization.requiredScore || 0);
+    
+    // Check if user has completed required lessons
+    const requiredLessons = Array.isArray(customization.requiredLessons) 
+      ? customization.requiredLessons as number[] 
+      : [];
+      
+    const userProgress = user.progress || {};
+    const completedLessons = Object.keys(userProgress).map(Number);
+    const meetsLessonRequirement = requiredLessons.every(lessonId => 
+      completedLessons.includes(lessonId)
+    );
+    
+    // Check if user has enough tokens
+    const canAfford = (user.tokens || 0) >= (customization.tokenCost || 0);
+    
+    if (meetsScoreRequirement && meetsLessonRequirement && canAfford) {
+      // Deduct tokens
+      await this.updateUserTokens(userId, -(customization.tokenCost || 0));
+      
+      // Add to user's unlocked customizations
+      const newUnlockedCustomizations = [...unlockedCustomizations, customization.name];
+      
+      // Update user
+      this.users.set(userId, {
+        ...user, 
+        unlockedCustomizations: newUnlockedCustomizations
+      });
+      
+      return true;
+    }
+    
+    return false;
+  }
+  
+  async applyCustomization(userId: number, customizationType: string, customizationName: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      return false;
+    }
+    
+    // Check if user has this customization
+    const unlockedCustomizations = Array.isArray(user.unlockedCustomizations) 
+      ? user.unlockedCustomizations as string[] 
+      : [];
+      
+    // For default customizations, don't check if unlocked
+    const isDefault = customizationName.startsWith('default') || 
+                      customizationName === 'beginner' ||
+                      customizationName === 'default';
+                      
+    if (!isDefault && !unlockedCustomizations.includes(customizationName)) {
+      return false;
+    }
+    
+    // Apply the customization based on type
+    switch (customizationType) {
+      case 'avatar':
+        this.users.set(userId, { ...user, profileImage: customizationName });
+        break;
+      case 'badge':
+        this.users.set(userId, { ...user, profileBadge: customizationName });
+        break;
+      case 'theme':
+        this.users.set(userId, { ...user, profileTheme: customizationName });
+        break;
+      default:
+        return false;
+    }
+    
+    return true;
+  }
+  
+  async getUserCustomizations(userId: number): Promise<string[]> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      return [];
+    }
+    
+    return Array.isArray(user.unlockedCustomizations) 
+      ? user.unlockedCustomizations as string[] 
+      : [];
+  }
+  
+  // Leaderboard functionality
+  async getLeaderboard(limit: number = 10): Promise<Array<{
+    userId: number;
+    username: string;
+    totalScore: number;
+    quizzesTaken: number;
+  }>> {
+    const users = Array.from(this.users.values());
+    const result = [];
+    
+    for (const user of users) {
+      const userScores = await this.getUserScores(user.id);
+      if (userScores.length === 0) {
+        continue; // Skip users with no scores
+      }
+      
+      const totalScore = userScores.reduce((sum, score) => sum + score.score, 0);
+      
+      result.push({
+        userId: user.id,
+        username: user.username,
+        totalScore,
+        quizzesTaken: userScores.length
+      });
+    }
+    
+    // Sort by total score in descending order
+    const sorted = result.sort((a, b) => b.totalScore - a.totalScore);
+    
+    // Return only the specified number of entries
+    return sorted.slice(0, limit);
+  }
 }
 
 export const storage = new MemStorage();

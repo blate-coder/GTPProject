@@ -103,6 +103,114 @@ export function registerRoutes(app: Express): Server {
     res.json(analytics);
   });
 
+  // Token management routes
+  app.post("/api/tokens", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const { amount, reason } = req.body;
+    
+    // Validate the amount
+    if (typeof amount !== 'number' || amount === 0) {
+      return res.status(400).json({ error: "Invalid token amount" });
+    }
+    
+    // Log the token transaction
+    console.log(`Token ${amount > 0 ? 'award' : 'deduction'} for user ${req.user.id}: ${amount} tokens (${reason || 'No reason provided'})`);
+    
+    await storage.updateUserTokens(req.user.id, amount);
+    const user = await storage.getUser(req.user.id);
+    
+    res.json({ 
+      success: true, 
+      newBalance: user?.tokens || 0 
+    });
+  });
+
+  // Customization routes
+  app.get("/api/customizations", async (req, res) => {
+    const customizations = await storage.getCustomizations();
+    res.json(customizations);
+  });
+  
+  app.get("/api/customizations/:id", async (req, res) => {
+    const customization = await storage.getCustomization(parseInt(req.params.id));
+    if (!customization) {
+      return res.status(404).json({ error: "Customization not found" });
+    }
+    res.json(customization);
+  });
+  
+  app.get("/api/customizations/type/:type", async (req, res) => {
+    const type = req.params.type;
+    const allCustomizations = await storage.getCustomizations();
+    const filteredCustomizations = allCustomizations.filter(c => c.type === type);
+    res.json(filteredCustomizations);
+  });
+  
+  app.get("/api/user/customizations", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    const customizationNames = await storage.getUserCustomizations(req.user.id);
+    
+    // Get the full customization objects
+    const allCustomizations = await storage.getCustomizations();
+    const userCustomizations = allCustomizations.filter(c => 
+      customizationNames.includes(c.name)
+    );
+    
+    res.json(userCustomizations);
+  });
+  
+  app.post("/api/customizations/purchase/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    const success = await storage.purchaseCustomization(
+      req.user.id, 
+      parseInt(req.params.id)
+    );
+    
+    if (!success) {
+      return res.status(400).json({ 
+        error: "Unable to purchase customization. Check requirements and token balance." 
+      });
+    }
+    
+    res.json({ success: true });
+  });
+  
+  app.post("/api/customizations/apply", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+    const { type, name } = req.body;
+    
+    if (!type || !name) {
+      return res.status(400).json({ error: "Both type and name are required" });
+    }
+    
+    const success = await storage.applyCustomization(req.user.id, type, name);
+    
+    if (!success) {
+      return res.status(400).json({ error: "Unable to apply customization" });
+    }
+    
+    res.json({ success: true });
+  });
+  
+  // Leaderboard route
+  app.get("/api/leaderboard", async (req, res) => {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+    const leaderboard = await storage.getLeaderboard(limit);
+    res.json(leaderboard);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
