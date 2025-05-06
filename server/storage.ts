@@ -112,15 +112,8 @@ export class MemStorage implements IStorage {
 
   async getUserScores(userId: number): Promise<Score[]> {
     const allScores = Array.from(this.scores.values());
+    // Only return scores that actually belong to this user
     const userScores = allScores.filter(score => score.userId === userId);
-    
-    // Clear any existing scores when user logs in for the first time
-    if (userScores.length === 0) {
-      // Remove all previous scores for this user
-      Array.from(this.scores.entries())
-        .filter(([_, score]) => score.userId === userId)
-        .forEach(([id, _]) => this.scores.delete(id));
-    }
     
     return userScores.sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
   }

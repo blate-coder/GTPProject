@@ -47,12 +47,12 @@ type ScoreAnalytics = {
 export default function ScoreAnalytics() {
   const { user } = useAuth();
   const { data: analytics, isLoading } = useQuery<ScoreAnalytics>({
-    queryKey: ["/api/scores/analytics"],
+    queryKey: ["/api/scores/analytics", user?.id],
     enabled: !!user,
   });
 
   const { data: scores } = useQuery<Score[]>({
-    queryKey: ["/api/scores"],
+    queryKey: ["/api/scores", user?.id],
     enabled: !!user,
   });
 

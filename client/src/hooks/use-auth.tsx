@@ -39,6 +39,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
+      
+      // Invalidate any cached query data to ensure fresh data for the new user
+      queryClient.invalidateQueries({queryKey: ["/api/scores"]});
+      queryClient.invalidateQueries({queryKey: ["/api/scores/analytics"]});
     },
     onError: (error: Error) => {
       toast({
@@ -56,6 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
+      
+      // Invalidate any cached query data for fresh state
+      queryClient.invalidateQueries({queryKey: ["/api/scores"]});
+      queryClient.invalidateQueries({queryKey: ["/api/scores/analytics"]});
     },
     onError: (error: Error) => {
       toast({
@@ -71,7 +79,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await apiRequest("POST", "/api/logout");
     },
     onSuccess: () => {
+      // Clear all user-specific query data to prevent data leakage
       queryClient.setQueryData(["/api/user"], null);
+      queryClient.invalidateQueries({queryKey: ["/api/scores"]});
+      queryClient.invalidateQueries({queryKey: ["/api/scores/analytics"]});
     },
     onError: (error: Error) => {
       toast({
