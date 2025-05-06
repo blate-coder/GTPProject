@@ -9,8 +9,9 @@ import { useState, useEffect, useMemo } from "react";
 import type { Quiz } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useCustomizations } from "@/hooks/use-customizations";
 import { Progress } from "@/components/ui/progress";
-import { Check, X, Trophy, RotateCcw } from "lucide-react";
+import { Check, X, Trophy, Coins, RotateCcw } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 // Helper function to shuffle an array (Fisher-Yates algorithm)
@@ -27,11 +28,13 @@ export default function QuizPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { addTokensMutation } = useCustomizations();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
   const [score, setScore] = useState({ correct: 0, total: 0 });
   const [showAnswer, setShowAnswer] = useState(false);
+  const [tokensAwarded, setTokensAwarded] = useState(0);
   // Store shuffled options for each question
   const [shuffledOptionsMap, setShuffledOptionsMap] = useState<Record<number, string[]>>({});
   
@@ -125,6 +128,22 @@ export default function QuizPage() {
       setScore(finalScore);
       setQuizFinished(true);
       
+      // Calculate token rewards based on performance
+      const percentage = (finalScore.correct / finalScore.total) * 100;
+      // Base tokens for completing the quiz
+      let tokenReward = 10;
+      
+      // Bonus tokens for good performance
+      if (percentage >= 90) {
+        tokenReward += 20; // Excellent
+      } else if (percentage >= 70) {
+        tokenReward += 10; // Good
+      } else if (percentage >= 50) {
+        tokenReward += 5; // Average
+      }
+      
+      setTokensAwarded(tokenReward);
+      
       toast({
         title: "Quiz Completed!",
         description: `You scored ${finalScore.correct} out of ${finalScore.total}`,
@@ -132,6 +151,11 @@ export default function QuizPage() {
 
       // Update user progress if logged in
       if (user) {
+        // Award tokens
+        addTokensMutation.mutate({
+          amount: tokenReward,
+          reason: `Completed quiz for lesson ${lessonId} with score ${percentage.toFixed(0)}%`
+        });
         const progressData = {
           ...user.progress,
           quizzes: {
@@ -184,8 +208,14 @@ export default function QuizPage() {
           <CardDescription>Lesson: {quiz.lessonId}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex justify-center">
+          <div className="flex justify-center gap-6">
             <Trophy className="h-20 w-20 text-yellow-500" />
+            {tokensAwarded > 0 && user && (
+              <div className="flex flex-col items-center justify-center">
+                <Coins className="h-16 w-16 text-yellow-500" />
+                <span className="text-xl font-bold mt-1">+{tokensAwarded}</span>
+              </div>
+            )}
           </div>
           
           <div className="text-center space-y-2">
@@ -197,6 +227,18 @@ export default function QuizPage() {
                percentage >= 60 ? "Good job! Keep practicing for mastery." : 
                "You might need more practice on this lesson."}
             </p>
+            
+            {tokensAwarded > 0 && user && (
+              <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                <p className="font-medium">
+                  <Coins className="h-4 w-4 inline mr-1 text-yellow-500" />
+                  You earned {tokensAwarded} tokens!
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Use tokens to unlock customizations in your profile.
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
