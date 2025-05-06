@@ -85,7 +85,7 @@ export class MemStorage implements IStorage {
       name: 'default-avatar',
       displayName: 'Default Avatar',
       description: 'The default user avatar',
-      imageUrl: '/assets/avatars/default.svg',
+      imageUrl: null,
       tokenCost: 0,
       requiredScore: 0,
       requiredLessons: []
@@ -93,24 +93,46 @@ export class MemStorage implements IStorage {
     
     this.addCustomization({
       type: 'avatar',
-      name: 'sakura-avatar',
-      displayName: 'Sakura Avatar',
-      description: 'Cherry blossom themed avatar',
-      imageUrl: '/assets/avatars/sakura.svg',
+      name: 'ninja',
+      displayName: 'Ninja Avatar',
+      description: 'For the stealthy learner',
+      imageUrl: null,
       tokenCost: 100,
-      requiredScore: 75,
+      requiredScore: 50,
       requiredLessons: []
     });
     
     this.addCustomization({
       type: 'avatar',
-      name: 'ninja-avatar',
-      displayName: 'Ninja Avatar',
-      description: 'For the stealthy learner',
-      imageUrl: '/assets/avatars/ninja.svg',
+      name: 'sakura',
+      displayName: 'Sakura Avatar',
+      description: 'Cherry blossom themed avatar',
+      imageUrl: null,
+      tokenCost: 150,
+      requiredScore: 65,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'avatar',
+      name: 'samurai',
+      displayName: 'Samurai Avatar',
+      description: 'The warrior\'s choice',
+      imageUrl: null,
       tokenCost: 200,
-      requiredScore: 85,
-      requiredLessons: [1, 2]
+      requiredScore: 80,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'avatar',
+      name: 'neko',
+      displayName: 'Neko Avatar',
+      description: 'For cat lovers',
+      imageUrl: null,
+      tokenCost: 250,
+      requiredScore: 90,
+      requiredLessons: []
     });
     
     // Default badges
