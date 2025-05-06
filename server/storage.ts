@@ -1,4 +1,7 @@
-import { users, type User, type InsertUser, type Lesson, type Quiz, type Score, type InsertScore } from "@shared/schema";
+import { 
+  users, type User, type InsertUser, type Lesson, type Quiz, 
+  type Score, type InsertScore, type Customization 
+} from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 // Import lesson and quiz data from separate files
@@ -8,14 +11,24 @@ import { getQuizByLessonId, quizzes } from "./data/quizzes";
 const MemoryStore = createMemoryStore(session);
 
 export interface IStorage {
+  // User management
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUserTokens(userId: number, tokens: number): Promise<void>;
+  
+  // Lesson management
   getLessons(): Promise<Lesson[]>;
   getLesson(id: number): Promise<Lesson | undefined>;
+  
+  // Quiz management
   getQuiz(lessonId: number): Promise<Quiz | undefined>;
   getQuizzesByTags(tags: string[]): Promise<Quiz[]>;
+  
+  // User progress
   updateUserProgress(userId: number, progress: Record<string, any>): Promise<void>;
+  
+  // Score management
   recordScore(score: InsertScore): Promise<Score>;
   getUserScores(userId: number): Promise<Score[]>;
   getUserScoresByQuiz(userId: number, quizId: number): Promise<Score[]>;
@@ -26,24 +39,154 @@ export interface IStorage {
     recentScores: Score[];
     scoresByCategory: Record<string, {count: number, avgScore: number}>;
   }>;
+  
+  // Customization management
+  getCustomizations(): Promise<Customization[]>;
+  getCustomization(id: number): Promise<Customization | undefined>;
+  getCustomizationByName(name: string): Promise<Customization | undefined>;
+  purchaseCustomization(userId: number, customizationId: number): Promise<boolean>;
+  applyCustomization(userId: number, customizationType: string, customizationName: string): Promise<boolean>;
+  getUserCustomizations(userId: number): Promise<string[]>;
+  
+  // Leaderboard
+  getLeaderboard(limit?: number): Promise<Array<{userId: number, username: string, totalScore: number, quizzesTaken: number}>>;
+  
   sessionStore: session.Store;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private scores: Map<number, Score>;
+  private customizations: Map<number, Customization>;
   private currentId: number;
   private currentScoreId: number;
+  private currentCustomizationId: number;
   readonly sessionStore: session.Store;
 
   constructor() {
     this.users = new Map();
     this.scores = new Map();
+    this.customizations = new Map();
     this.currentId = 1;
     this.currentScoreId = 1;
+    this.currentCustomizationId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
     });
+    
+    // Initialize with default customizations
+    this.initializeDefaultCustomizations();
+  }
+  
+  private initializeDefaultCustomizations() {
+    // Default avatars
+    this.addCustomization({
+      type: 'avatar',
+      name: 'default-avatar',
+      displayName: 'Default Avatar',
+      description: 'The default user avatar',
+      imageUrl: '/assets/avatars/default.svg',
+      tokenCost: 0,
+      requiredScore: 0,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'avatar',
+      name: 'sakura-avatar',
+      displayName: 'Sakura Avatar',
+      description: 'Cherry blossom themed avatar',
+      imageUrl: '/assets/avatars/sakura.svg',
+      tokenCost: 100,
+      requiredScore: 75,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'avatar',
+      name: 'ninja-avatar',
+      displayName: 'Ninja Avatar',
+      description: 'For the stealthy learner',
+      imageUrl: '/assets/avatars/ninja.svg',
+      tokenCost: 200,
+      requiredScore: 85,
+      requiredLessons: [1, 2]
+    });
+    
+    // Default badges
+    this.addCustomization({
+      type: 'badge',
+      name: 'beginner',
+      displayName: 'Beginner',
+      description: 'Just starting your Japanese journey',
+      imageUrl: '/assets/badges/beginner.svg',
+      tokenCost: 0,
+      requiredScore: 0,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'badge',
+      name: 'intermediate',
+      displayName: 'Intermediate',
+      description: 'Making good progress in Japanese',
+      imageUrl: '/assets/badges/intermediate.svg',
+      tokenCost: 150,
+      requiredScore: 80,
+      requiredLessons: [1, 3]
+    });
+    
+    this.addCustomization({
+      type: 'badge',
+      name: 'advanced',
+      displayName: 'Advanced',
+      description: 'Mastering the Japanese language',
+      imageUrl: '/assets/badges/advanced.svg',
+      tokenCost: 300,
+      requiredScore: 90,
+      requiredLessons: [1, 2, 3, 4]
+    });
+    
+    // Default themes
+    this.addCustomization({
+      type: 'theme',
+      name: 'default',
+      displayName: 'Default Theme',
+      description: 'The standard app theme',
+      imageUrl: '/assets/themes/default.svg',
+      tokenCost: 0,
+      requiredScore: 0,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'theme',
+      name: 'sakura',
+      displayName: 'Sakura Theme',
+      description: 'Cherry blossom inspired theme',
+      imageUrl: '/assets/themes/sakura.svg',
+      tokenCost: 120,
+      requiredScore: 70,
+      requiredLessons: []
+    });
+    
+    this.addCustomization({
+      type: 'theme',
+      name: 'night',
+      displayName: 'Night Theme',
+      description: 'Dark theme with Japanese-inspired elements',
+      imageUrl: '/assets/themes/night.svg',
+      tokenCost: 250,
+      requiredScore: 85,
+      requiredLessons: [2, 4]
+    });
+  }
+  
+  private addCustomization(customization: Omit<Customization, 'id'>): Customization {
+    const id = this.currentCustomizationId++;
+    const newCustomization: Customization = { ...customization, id };
+    this.customizations.set(id, newCustomization);
+    return newCustomization;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -58,9 +201,27 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentId++;
-    const user: User = { ...insertUser, id, progress: {} };
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      progress: {},
+      tokens: 0,
+      profileImage: 'default-avatar',
+      profileBadge: 'beginner',
+      profileTheme: 'default',
+      unlockedCustomizations: [] 
+    };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUserTokens(userId: number, amount: number): Promise<void> {
+    const user = await this.getUser(userId);
+    if (user) {
+      // Update tokens (add or subtract)
+      const newTokenBalance = Math.max(0, (user.tokens || 0) + amount);
+      this.users.set(userId, { ...user, tokens: newTokenBalance });
+    }
   }
 
   async getLessons(): Promise<Lesson[]> {

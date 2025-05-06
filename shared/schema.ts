@@ -7,6 +7,11 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   progress: jsonb("progress").default({}).notNull(),
+  tokens: integer("tokens").default(0).notNull(),
+  profileImage: text("profile_image").default("default-avatar"),
+  profileBadge: text("profile_badge").default("beginner"),
+  profileTheme: text("profile_theme").default("default"),
+  unlockedCustomizations: jsonb("unlocked_customizations").default([]).notNull(),
 });
 
 export const scores = pgTable("scores", {
@@ -37,6 +42,18 @@ export const quizzes = pgTable("quizzes", {
   tags: jsonb("tags").default([]).notNull(),
 });
 
+export const customizations = pgTable("customizations", {
+  id: serial("id").primaryKey(),
+  type: text("type").notNull(), // 'avatar', 'badge', 'theme'
+  name: text("name").notNull().unique(),
+  displayName: text("display_name").notNull(), 
+  description: text("description").notNull(),
+  imageUrl: text("image_url"),
+  tokenCost: integer("token_cost").notNull(),
+  requiredScore: integer("required_score").default(0), // minimum score needed to unlock
+  requiredLessons: jsonb("required_lessons").default([]).notNull(), // array of lesson IDs needed to complete
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -44,6 +61,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export const insertLessonSchema = createInsertSchema(lessons);
 export const insertQuizSchema = createInsertSchema(quizzes);
+export const insertCustomizationSchema = createInsertSchema(customizations);
 
 export const insertScoreSchema = createInsertSchema(scores).omit({ 
   id: true, 
@@ -52,7 +70,9 @@ export const insertScoreSchema = createInsertSchema(scores).omit({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertScore = z.infer<typeof insertScoreSchema>;
+export type InsertCustomization = z.infer<typeof insertCustomizationSchema>;
 export type User = typeof users.$inferSelect;
 export type Lesson = typeof lessons.$inferSelect;
 export type Quiz = typeof quizzes.$inferSelect;
 export type Score = typeof scores.$inferSelect;
+export type Customization = typeof customizations.$inferSelect;
