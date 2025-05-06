@@ -169,7 +169,7 @@ export default function ProfilePage() {
                             >
                               <CardContent className="p-3 text-center">
                                 <Avatar className="h-16 w-16 mx-auto">
-                                  <AvatarImage src={avatar.imageUrl} />
+                                  <AvatarImage src={avatar.imageUrl || ''} />
                                   <AvatarFallback>?</AvatarFallback>
                                 </Avatar>
                                 <p className="text-sm mt-2">{avatar.displayName}</p>

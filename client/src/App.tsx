@@ -10,6 +10,7 @@ import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import GrammarQuizzes from "@/pages/grammar-quizzes";
 import Analytics from "@/pages/analytics";
+import ProfilePage from "@/pages/profile";
 import Header from "@/components/header";
 import { AuthProvider } from "@/hooks/use-auth";
 
@@ -24,6 +25,7 @@ function Router() {
           <Route path="/quiz/:lessonId" component={Quiz} />
           <Route path="/grammar-quizzes" component={GrammarQuizzes} />
           <Route path="/analytics" component={Analytics} />
+          <Route path="/profile" component={ProfilePage} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           <Route component={NotFound} />
