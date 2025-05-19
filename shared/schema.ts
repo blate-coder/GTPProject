@@ -12,8 +12,6 @@ export const users = pgTable("users", {
   profileBadge: text("profile_badge").default("beginner"),
   profileTheme: text("profile_theme").default("default"),
   unlockedCustomizations: jsonb("unlocked_customizations").default([]).notNull(),
-  completedLessons: jsonb("completed_lessons").default([]).notNull(),
-  highestScore: integer("highest_score").default(0).notNull(),
 });
 
 export const scores = pgTable("scores", {

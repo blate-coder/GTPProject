@@ -43,8 +43,6 @@ export function registerRoutes(app: Express): Server {
   });
 
   app.post("/api/progress/:userId", async (req, res) => {
-    // Allow progress updates even when not authenticated
-    // This enables tracking lesson completions for guest users
     const { progress } = req.body;
     await storage.updateUserProgress(parseInt(req.params.userId), progress);
     res.json({ success: true });
@@ -52,15 +50,13 @@ export function registerRoutes(app: Express): Server {
 
   // Score recording route
   app.post("/api/scores", async (req, res) => {
-    // Allow score recording even for users not logged in
-    // This enables recording scores for the demo
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     try {
-      // Get user ID either from authenticated user or request body
-      const userId = req.isAuthenticated() ? req.user.id : (req.body.userId || 1);
-      
       const scoreData = {
-        userId: userId,
+        userId: req.user.id,
         quizId: req.body.quizId,
         score: req.body.score,
         maxScore: req.body.maxScore,
@@ -109,16 +105,11 @@ export function registerRoutes(app: Express): Server {
 
   // Token management routes
   app.post("/api/tokens", async (req, res) => {
-    // Allow token updates even for guests/users not logged in
-    // This makes the demo system more functional
-    const { amount, reason, userId } = req.body;
-    
-    // Get the user ID either from the request body or the authenticated user
-    const userIdToUpdate = userId || (req.isAuthenticated() ? req.user.id : null);
-    
-    if (!userIdToUpdate) {
-      return res.status(400).json({ error: "User ID is required" });
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ error: "Unauthorized" });
     }
+
+    const { amount, reason } = req.body;
     
     // Validate the amount
     if (typeof amount !== 'number' || amount === 0) {
@@ -126,10 +117,10 @@ export function registerRoutes(app: Express): Server {
     }
     
     // Log the token transaction
-    console.log(`Token ${amount > 0 ? 'award' : 'deduction'} for user ${userIdToUpdate}: ${amount} tokens (${reason || 'No reason provided'})`);
+    console.log(`Token ${amount > 0 ? 'award' : 'deduction'} for user ${req.user.id}: ${amount} tokens (${reason || 'No reason provided'})`);
     
-    await storage.updateUserTokens(userIdToUpdate, amount);
-    const user = await storage.getUser(userIdToUpdate);
+    await storage.updateUserTokens(req.user.id, amount);
+    const user = await storage.getUser(req.user.id);
     
     res.json({ 
       success: true, 

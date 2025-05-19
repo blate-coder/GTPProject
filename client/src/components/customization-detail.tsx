@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
 import { useTheme } from "@/hooks/use-theme";
-import { useLessonCompletion } from "@/hooks/use-lesson-completion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +24,6 @@ export default function CustomizationDetail({
 }: CustomizationDetailProps) {
   const { user } = useAuth();
   const { setTheme } = useTheme();
-  const { highestScore, isLessonCompleted } = useLessonCompletion();
   const queryClient = useQueryClient();
   const isUnlocked = unlockedCustomizations.includes(customization.name);
   
@@ -164,14 +162,7 @@ export default function CustomizationDetail({
                 {customization.requiredScore && customization.requiredScore > 0 && (
                   <div className="flex justify-between">
                     <span>Minimum quiz score:</span>
-                    <span className={highestScore >= customization.requiredScore 
-                      ? "font-medium text-green-600 flex items-center" 
-                      : "font-medium"}>
-                      {customization.requiredScore}%
-                      {highestScore >= customization.requiredScore && 
-                        <CheckCircle className="h-4 w-4 ml-2" />
-                      }
-                    </span>
+                    <span className="font-medium">{customization.requiredScore}%</span>
                   </div>
                 )}
                 
@@ -179,15 +170,9 @@ export default function CustomizationDetail({
                   <div>
                     <p>Complete lessons:</p>
                     <ul className="list-disc list-inside mt-1 pl-2">
-                      {customization.requiredLessons.map(lessonId => {
-                        const completed = isLessonCompleted(lessonId);
-                        return (
-                          <li key={lessonId} className={`text-sm flex items-center ${completed ? "text-green-600" : ""}`}>
-                            <span>Lesson {lessonId}</span>
-                            {completed && <CheckCircle className="h-4 w-4 ml-2" />}
-                          </li>
-                        );
-                      })}
+                      {customization.requiredLessons.map(lessonId => (
+                        <li key={lessonId} className="text-sm">Lesson {lessonId}</li>
+                      ))}
                     </ul>
                   </div>
                 )}

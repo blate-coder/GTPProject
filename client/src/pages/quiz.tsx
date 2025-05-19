@@ -5,12 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Quiz } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomizations } from "@/hooks/use-customizations";
-import { useLessonCompletion } from "@/hooks/use-lesson-completion";
 import { Progress } from "@/components/ui/progress";
 import { Check, X, Trophy, Coins, RotateCcw } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -25,24 +24,11 @@ function shuffleArray<T>(array: T[]): T[] {
   return shuffled;
 }
 
-// Define question type for better type safety
-type QuizQuestion = {
-  text: string;
-  options: string[];
-  answer: string;
-};
-
-// Extend Quiz type with explicit questions type
-interface QuizWithQuestions extends Quiz {
-  questions: QuizQuestion[];
-}
-
 export default function QuizPage() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const { toast } = useToast();
   const { user } = useAuth();
   const { addTokensMutation } = useCustomizations();
-  const { completeLesson, updateHighestScore } = useLessonCompletion();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
@@ -52,8 +38,7 @@ export default function QuizPage() {
   // Store shuffled options for each question
   const [shuffledOptionsMap, setShuffledOptionsMap] = useState<Record<number, string[]>>({});
   
-  // Explicitly cast the data type to fix type errors
-  const { data: quiz, isLoading } = useQuery<QuizWithQuestions>({
+  const { data: quiz, isLoading } = useQuery<Quiz>({
     queryKey: [`/api/quizzes/${lessonId}`],
   });
 
@@ -72,7 +57,7 @@ export default function QuizPage() {
   });
   
   const recordScoreMutation = useMutation({
-    mutationFn: async (scoreData: { userId: number; quizId: number; score: number; maxScore: number; }) => {
+    mutationFn: async (scoreData: { quizId: number; score: number; maxScore: number; }) => {
       const res = await apiRequest("POST", "/api/scores", scoreData);
       return await res.json();
     },
@@ -85,7 +70,7 @@ export default function QuizPage() {
 
   // Initialize or reset when quiz data is loaded or lessonId changes
   useEffect(() => {
-    if (quiz && quiz.questions) {
+    if (quiz) {
       // Create shuffled options for each question
       const shuffledOptions: Record<number, string[]> = {};
       quiz.questions.forEach((question, index) => {
@@ -105,7 +90,7 @@ export default function QuizPage() {
     return <Skeleton className="h-[400px]" />;
   }
 
-  if (!quiz || !quiz.questions || quiz.questions.length === 0) {
+  if (!quiz) {
     return <div>Quiz not found</div>;
   }
 
@@ -145,13 +130,6 @@ export default function QuizPage() {
       
       // Calculate token rewards based on performance
       const percentage = (finalScore.correct / finalScore.total) * 100;
-      
-      // Mark this lesson as completed in our tracking system
-      completeLesson(parseInt(lessonId));
-      
-      // Update the highest score if needed
-      updateHighestScore(percentage);
-      
       // Base tokens for completing the quiz
       let tokenReward = 10;
       
@@ -171,78 +149,41 @@ export default function QuizPage() {
         description: `You scored ${finalScore.correct} out of ${finalScore.total}`,
       });
 
-      // Always update progress and award tokens, whether user is logged in or not
-      // This enables the demo functionality
-      // Award tokens - note that we're providing the userId parameter
-      const userId = user?.id || 1; // Use user ID if available, otherwise default to 1
-      addTokensMutation.mutate({
-        userId: userId,
-        amount: tokenReward,
-        reason: `Completed quiz for lesson ${lessonId} with score ${Math.round((finalScore.correct / finalScore.total) * 100)}%`
-      });
-
+      // Update user progress if logged in
       if (user) {
-        // Get current progress from user or create fresh object
-        const currentProgress = user.progress ? JSON.parse(JSON.stringify(user.progress)) : {};
-        
-        // Get current completed lessons or create a new array
-        const currentCompletedLessons = 
-          currentProgress.completedLessons ? [...currentProgress.completedLessons] : [];
-          
-        // Get current quiz data
-        const currentQuizzes = currentProgress.quizzes || {};
-        
-        // Convert lesson ID to number
-        const lessonIdNumber = parseInt(lessonId);
-        
-        // Check if this lesson is already completed
-        const isLessonCompleted = currentCompletedLessons.includes(lessonIdNumber);
-        
-        // Add to completed lessons if not already there
-        if (!isLessonCompleted) {
-          currentCompletedLessons.push(lessonIdNumber);
-        }
-        
-        // Calculate highest score percentage
-        const scorePercentage = Math.round((finalScore.correct / finalScore.total) * 100);
-        const currentHighestScore = currentProgress.highestScore || 0;
-        const newHighestScore = Math.max(currentHighestScore, scorePercentage);
-        
-        // Construct the full progress data
+        // Award tokens
+        addTokensMutation.mutate({
+          amount: tokenReward,
+          reason: `Completed quiz for lesson ${lessonId} with score ${percentage.toFixed(0)}%`
+        });
         const progressData = {
-          ...currentProgress,
+          ...user.progress,
           quizzes: {
-            ...currentQuizzes,
+            ...user.progress.quizzes,
             [lessonId]: {
               completed: true,
               score: finalScore.correct,
               total: finalScore.total,
               lastAttempt: new Date().toISOString()
             }
-          },
-          // Update completed lessons
-          completedLessons: currentCompletedLessons,
-          // Update highest score if needed
-          highestScore: newHighestScore
+          }
         };
         
         updateProgressMutation.mutate(progressData);
+        
+        // Record the score for analytics
+        recordScoreMutation.mutate({
+          quizId: parseInt(lessonId),
+          score: finalScore.correct,
+          maxScore: finalScore.total
+        });
       }
-      
-      // Record the score for analytics
-      const scoreUserId = user?.id || 1; // Use user ID if available, otherwise default to 1
-      recordScoreMutation.mutate({
-        userId: scoreUserId,
-        quizId: parseInt(lessonId),
-        score: finalScore.correct,
-        maxScore: finalScore.total
-      });
     }
   };
 
   const handleRetake = () => {
     // Reshuffle options for a new attempt
-    if (quiz && quiz.questions) {
+    if (quiz) {
       const newShuffledOptions: Record<number, string[]> = {};
       quiz.questions.forEach((question, index) => {
         newShuffledOptions[index] = shuffleArray(question.options);
@@ -269,7 +210,7 @@ export default function QuizPage() {
         <CardContent className="space-y-6">
           <div className="flex justify-center gap-6">
             <Trophy className="h-20 w-20 text-yellow-500" />
-            {tokensAwarded > 0 && (
+            {tokensAwarded > 0 && user && (
               <div className="flex flex-col items-center justify-center">
                 <Coins className="h-16 w-16 text-yellow-500" />
                 <span className="text-xl font-bold mt-1">+{tokensAwarded}</span>
@@ -287,7 +228,7 @@ export default function QuizPage() {
                "You might need more practice on this lesson."}
             </p>
             
-            {tokensAwarded > 0 && (
+            {tokensAwarded > 0 && user && (
               <div className="mt-4 p-4 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-md">
                 <p className="font-medium">
                   <Coins className="h-4 w-4 inline mr-1 text-yellow-500" />
