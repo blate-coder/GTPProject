@@ -186,7 +186,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/themes/default.svg',
       tokenCost: 0,
       requiredScore: 0,
-      requiredLessons: []
+      requiredTokensEarned: 0,
+      requiredLessonsPlayed: 0
     });
     
     this.addCustomization({
@@ -197,7 +198,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/themes/sakura.svg',
       tokenCost: 120,
       requiredScore: 70,
-      requiredLessons: []
+      requiredTokensEarned: 120,
+      requiredLessonsPlayed: 2
     });
     
     this.addCustomization({
@@ -208,7 +210,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/themes/night.svg',
       tokenCost: 250,
       requiredScore: 85,
-      requiredLessons: [2, 4]
+      requiredTokensEarned: 200,
+      requiredLessonsPlayed: 3
     });
   }
   
@@ -413,21 +416,18 @@ export class MemStorage implements IStorage {
       
     const meetsScoreRequirement = highestScore >= (customization.requiredScore || 0);
     
-    // Check if user has completed required lessons
-    const requiredLessons = Array.isArray(customization.requiredLessons) 
-      ? customization.requiredLessons as number[] 
-      : [];
-      
+    // Check if user has earned enough tokens
+    const meetsTokenRequirement = (user.tokens || 0) >= (customization.requiredTokensEarned || 0);
+    
+    // Check if user has played enough lessons  
     const userProgress = user.progress || {};
-    const completedLessons = Object.keys(userProgress).map(Number);
-    const meetsLessonRequirement = requiredLessons.every(lessonId => 
-      completedLessons.includes(lessonId)
-    );
+    const completedLessons = userProgress.completedLessons || [];
+    const meetsLessonRequirement = (completedLessons.length || 0) >= (customization.requiredLessonsPlayed || 0);
     
     // Check if user has enough tokens
     const canAfford = (user.tokens || 0) >= (customization.tokenCost || 0);
     
-    if (meetsScoreRequirement && meetsLessonRequirement && canAfford) {
+    if (meetsScoreRequirement && meetsTokenRequirement && meetsLessonRequirement && canAfford) {
       // Deduct tokens
       const tokenCost = customization.tokenCost || 0;
       const newBalance = Math.max(0, (user.tokens || 0) - tokenCost);
