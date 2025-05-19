@@ -124,7 +124,8 @@ export class MemStorage implements IStorage {
       imageUrl: null,
       tokenCost: 200,
       requiredScore: 80,
-      requiredLessons: []
+      requiredTokensEarned: 150,
+      requiredLessonsPlayed: 3
     });
     
     this.addCustomization({
@@ -135,7 +136,8 @@ export class MemStorage implements IStorage {
       imageUrl: null,
       tokenCost: 250,
       requiredScore: 90,
-      requiredLessons: []
+      requiredTokensEarned: 200,
+      requiredLessonsPlayed: 4
     });
     
     // Default badges
@@ -147,7 +149,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/badges/beginner.svg',
       tokenCost: 0,
       requiredScore: 0,
-      requiredLessons: []
+      requiredTokensEarned: 0,
+      requiredLessonsPlayed: 0
     });
     
     this.addCustomization({
@@ -158,7 +161,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/badges/intermediate.svg',
       tokenCost: 150,
       requiredScore: 80,
-      requiredLessons: [1, 3]
+      requiredTokensEarned: 150, 
+      requiredLessonsPlayed: 2
     });
     
     this.addCustomization({
@@ -169,7 +173,8 @@ export class MemStorage implements IStorage {
       imageUrl: '/assets/badges/advanced.svg',
       tokenCost: 300,
       requiredScore: 90,
-      requiredLessons: [1, 2, 3, 4]
+      requiredTokensEarned: 250,
+      requiredLessonsPlayed: 5
     });
     
     // Default themes
