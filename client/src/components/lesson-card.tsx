@@ -14,6 +14,7 @@ export default function LessonCard({ lesson }: LessonCardProps) {
     <Card className="group hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="font-medium">Lesson {lesson.id}</Badge>
           {lesson.type === 'song' ? <Music className="h-5 w-5" /> : <Video className="h-5 w-5" />}
           <Badge variant="outline">{lesson.difficulty}</Badge>
         </div>
