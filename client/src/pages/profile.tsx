@@ -8,14 +8,18 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Trophy, Coins, User, Award, Palette } from "lucide-react";
+import { Loader2, Trophy, Coins, User, Award, Palette, Grid3X3 } from "lucide-react";
 import { useState } from "react";
 import { Redirect } from "wouter";
+import CustomizationDetail from "@/components/customization-detail";
+import { Customization } from "@shared/schema";
 
 export default function ProfilePage() {
   const { user, isLoading: isLoadingUser } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedCustomizationType, setSelectedCustomizationType] = useState<string | null>(null);
+  const [selectedCustomization, setSelectedCustomization] = useState<Customization | null>(null);
   
   const {
     customizations,
@@ -48,20 +52,38 @@ export default function ProfilePage() {
   
   const userRank = leaderboard.findIndex(entry => entry.userId === user.id) + 1;
   
-  const handlePurchase = (customizationId: number) => {
-    purchaseMutation.mutate(customizationId);
-  };
-  
-  const handleApply = (type: string, name: string) => {
-    applyMutation.mutate({ type, name });
-  };
-  
   // For development/testing only - would be removed in production
   const handleAddTokens = () => {
     addTokensMutation.mutate({ 
       amount: 100, 
       reason: "Developer testing" 
     });
+  };
+  
+  const handleShowCustomizationDetails = (customization: Customization) => {
+    setSelectedCustomization(customization);
+  };
+  
+  const handleBackFromDetails = () => {
+    setSelectedCustomization(null);
+  };
+  
+  const handleSelectCustomizationType = (type: string) => {
+    setSelectedCustomizationType(type);
+    setSelectedCustomization(null);
+  };
+  
+  const handleBackToTypes = () => {
+    setSelectedCustomizationType(null);
+  };
+  
+  // Use the mutations from useCustomizations hook
+  const handlePurchase = (customizationId: number) => {
+    purchaseMutation.mutate(customizationId);
+  };
+  
+  const handleApply = (type: string, name: string) => {
+    applyMutation.mutate({ type, name });
   };
   
   return (
@@ -147,137 +169,86 @@ export default function ProfilePage() {
               </TabsContent>
               
               <TabsContent value="customize">
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-3 flex items-center">
-                      <User className="h-4 w-4 mr-1" /> Avatars
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {selectedCustomization ? (
+                  <CustomizationDetail
+                    customization={selectedCustomization}
+                    unlockedCustomizations={userCustomizations}
+                    onBack={handleBackFromDetails}
+                  />
+                ) : selectedCustomizationType ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <Button variant="ghost" size="sm" onClick={handleBackToTypes}>
+                        <ArrowLeft className="h-4 w-4 mr-2" /> Back to Categories
+                      </Button>
+                      <h3 className="font-medium text-lg">
+                        {selectedCustomizationType === 'avatar' && 'Choose an Avatar'}
+                        {selectedCustomizationType === 'badge' && 'Choose a Badge'}
+                        {selectedCustomizationType === 'theme' && 'Choose a Theme'}
+                      </h3>
+                      <div className="w-8"></div> {/* Spacer for alignment */}
+                    </div>
+                    
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                       {isLoadingCustomizations ? (
                         <Loader2 className="h-8 w-8 animate-spin" />
                       ) : (
-                        getCustomizationsByType('avatar').map(avatar => {
-                          const isUnlocked = isCustomizationUnlocked(avatar.name) || 
-                                          avatar.name === 'default-avatar';
+                        getCustomizationsByType(selectedCustomizationType).map(item => {
+                          const isUnlocked = isCustomizationUnlocked(item.name) || 
+                                          (item.name === 'default-avatar') ||
+                                          (item.name === 'beginner') ||
+                                          (item.name === 'default');
+                          
                           return (
                             <Card 
-                              key={avatar.id}
+                              key={item.id}
                               className={`overflow-hidden cursor-pointer transition hover:bg-accent ${
-                                user.profileImage === avatar.name ? 'ring-2 ring-primary' : ''
-                              } ${!isUnlocked ? 'opacity-60' : ''}`}
-                              onClick={() => isUnlocked && handleApply('avatar', avatar.name)}
+                                ((selectedCustomizationType === 'avatar' && user.profileImage === item.name) ||
+                                 (selectedCustomizationType === 'badge' && user.profileBadge === item.name) ||
+                                 (selectedCustomizationType === 'theme' && user.profileTheme === item.name))
+                                 ? 'ring-2 ring-primary' : ''
+                              } ${!isUnlocked ? 'opacity-70' : ''}`}
+                              onClick={() => handleShowCustomizationDetails(item)}
                             >
                               <CardContent className="p-3 text-center">
-                                <Avatar className="h-16 w-16 mx-auto">
-                                  <AvatarImage src={`/assets/avatars/${avatar.name}.svg`} />
-                                  <AvatarFallback>?</AvatarFallback>
-                                </Avatar>
-                                <p className="text-sm mt-2">{avatar.displayName}</p>
-                                {!isUnlocked && (
-                                  <div className="mt-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      <Coins className="h-3 w-3" /> {avatar.tokenCost}
+                                {/* Avatar preview */}
+                                {selectedCustomizationType === 'avatar' && (
+                                  <Avatar className="h-16 w-16 mx-auto">
+                                    <AvatarImage src={`/assets/avatars/${item.name}.svg`} />
+                                    <AvatarFallback>?</AvatarFallback>
+                                  </Avatar>
+                                )}
+                                
+                                {/* Badge preview */}
+                                {selectedCustomizationType === 'badge' && (
+                                  <div className="h-16 w-16 mx-auto flex items-center justify-center">
+                                    <Badge variant="secondary" className="text-md px-3 py-1">
+                                      {item.displayName}
                                     </Badge>
-                                    
-                                    {/* Show requirements */}
-                                    {avatar.requiredScore && avatar.requiredScore > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required score: {avatar.requiredScore}%
-                                      </p>
-                                    )}
-                                    
-                                    {Array.isArray(avatar.requiredLessons) && avatar.requiredLessons.length > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required lessons: {avatar.requiredLessons.join(', ')}
-                                      </p>
-                                    )}
-                                    
-                                    <Button 
-                                      size="sm" 
-                                      className="mt-2 w-full"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePurchase(avatar.id);
-                                      }}
-                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < avatar.tokenCost}
-                                    >
-                                      {purchaseMutation.isPending ? (
-                                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : (user?.tokens || 0) < avatar.tokenCost ? 
-                                        'Not enough tokens' : 'Buy'}
-                                    </Button>
                                   </div>
                                 )}
-                              </CardContent>
-                            </Card>
-                          );
-                        })
-                      )}
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-3 flex items-center">
-                      <Award className="h-4 w-4 mr-1" /> Badges
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {isLoadingCustomizations ? (
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                      ) : (
-                        getCustomizationsByType('badge').map(badge => {
-                          const isUnlocked = isCustomizationUnlocked(badge.name) || 
-                                          badge.name === 'beginner';
-                          return (
-                            <Card 
-                              key={badge.id}
-                              className={`overflow-hidden cursor-pointer transition hover:bg-accent ${
-                                user.profileBadge === badge.name ? 'ring-2 ring-primary' : ''
-                              } ${!isUnlocked ? 'opacity-60' : ''}`}
-                              onClick={() => isUnlocked && handleApply('badge', badge.name)}
-                            >
-                              <CardContent className="p-3 text-center">
-                                <div className="h-16 w-16 mx-auto flex items-center justify-center">
-                                  <Badge variant="secondary" className="text-md px-3 py-1">
-                                    {badge.displayName}
+                                
+                                {/* Theme preview */}
+                                {selectedCustomizationType === 'theme' && (
+                                  <div className="h-16 w-16 mx-auto flex items-center justify-center rounded-full overflow-hidden">
+                                    {item.name === 'default' && (
+                                      <div className="bg-primary h-full w-full"></div>
+                                    )}
+                                    {item.name === 'sakura' && (
+                                      <div className="bg-pink-300 h-full w-full"></div>
+                                    )}
+                                    {item.name === 'night' && (
+                                      <div className="bg-slate-800 h-full w-full"></div>
+                                    )}
+                                  </div>
+                                )}
+                                
+                                <p className="text-sm mt-2 font-medium">{item.displayName}</p>
+                                
+                                {!isUnlocked && (
+                                  <Badge variant="outline" className="mt-1">
+                                    <Coins className="h-3 w-3 mr-1" /> {item.tokenCost}
                                   </Badge>
-                                </div>
-                                <p className="text-sm mt-2">{badge.description}</p>
-                                {!isUnlocked && (
-                                  <div className="mt-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      <Coins className="h-3 w-3" /> {badge.tokenCost}
-                                    </Badge>
-                                    
-                                    {/* Show requirements */}
-                                    {badge.requiredScore && badge.requiredScore > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required score: {badge.requiredScore}%
-                                      </p>
-                                    )}
-                                    
-                                    {Array.isArray(badge.requiredLessons) && badge.requiredLessons.length > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required lessons: {badge.requiredLessons.join(', ')}
-                                      </p>
-                                    )}
-                                    
-                                    <Button 
-                                      size="sm" 
-                                      className="mt-2 w-full"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePurchase(badge.id);
-                                      }}
-                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < badge.tokenCost}
-                                    >
-                                      {purchaseMutation.isPending ? (
-                                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : (user?.tokens || 0) < badge.tokenCost ? 
-                                        'Not enough tokens' : 'Buy'}
-                                    </Button>
-                                  </div>
                                 )}
                               </CardContent>
                             </Card>
@@ -286,84 +257,101 @@ export default function ProfilePage() {
                       )}
                     </div>
                   </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-3 flex items-center">
-                      <Palette className="h-4 w-4 mr-1" /> Themes
-                    </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                      {isLoadingCustomizations ? (
-                        <Loader2 className="h-8 w-8 animate-spin" />
-                      ) : (
-                        getCustomizationsByType('theme').map(theme => {
-                          const isUnlocked = isCustomizationUnlocked(theme.name) || 
-                                          theme.name === 'default';
-                          return (
-                            <Card 
-                              key={theme.id}
-                              className={`overflow-hidden cursor-pointer transition hover:bg-accent ${
-                                user.profileTheme === theme.name ? 'ring-2 ring-primary' : ''
-                              } ${!isUnlocked ? 'opacity-60' : ''}`}
-                              onClick={() => isUnlocked && handleApply('theme', theme.name)}
-                            >
-                              <CardContent className="p-3 text-center">
-                                <div className="h-16 w-16 mx-auto flex items-center justify-center rounded-full overflow-hidden">
-                                  {theme.name === 'default' && (
-                                    <div className="bg-primary h-full w-full"></div>
-                                  )}
-                                  {theme.name === 'sakura' && (
-                                    <div className="bg-pink-300 h-full w-full"></div>
-                                  )}
-                                  {theme.name === 'night' && (
-                                    <div className="bg-slate-800 h-full w-full"></div>
-                                  )}
-                                </div>
-                                <p className="text-sm mt-2">{theme.displayName}</p>
-                                {!isUnlocked && (
-                                  <div className="mt-2">
-                                    <Badge variant="outline" className="flex items-center gap-1">
-                                      <Coins className="h-3 w-3" /> {theme.tokenCost}
-                                    </Badge>
-                                    
-                                    {/* Show requirements */}
-                                    {theme.requiredScore && theme.requiredScore > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required score: {theme.requiredScore}%
-                                      </p>
-                                    )}
-                                    
-                                    {Array.isArray(theme.requiredLessons) && theme.requiredLessons.length > 0 && (
-                                      <p className="text-xs text-muted-foreground mt-1">
-                                        Required lessons: {theme.requiredLessons.join(', ')}
-                                      </p>
-                                    )}
-                                    
-                                    <Button 
-                                      size="sm" 
-                                      className="mt-2 w-full"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handlePurchase(theme.id);
-                                      }}
-                                      disabled={purchaseMutation.isPending || (user?.tokens || 0) < theme.tokenCost}
-                                    >
-                                      {purchaseMutation.isPending ? (
-                                        <Loader2 className="h-3 w-3 animate-spin mr-1" />
-                                      ) : (user?.tokens || 0) < theme.tokenCost ? 
-                                        'Not enough tokens' : 'Buy'}
-                                    </Button>
-                                  </div>
-                                )}
-                              </CardContent>
-                            </Card>
-                          );
-                        })
-                      )}
+                ) : (
+                  <div className="space-y-6">
+                    <h3 className="font-medium mb-4">Customize Your Profile</h3>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <Card 
+                        className="cursor-pointer hover:bg-accent transition"
+                        onClick={() => handleSelectCustomizationType('avatar')}
+                      >
+                        <CardContent className="p-6 flex flex-col items-center text-center">
+                          <User className="h-12 w-12 mb-3 text-primary" />
+                          <h4 className="font-medium">Avatars</h4>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Choose how you appear to others
+                          </p>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card 
+                        className="cursor-pointer hover:bg-accent transition"
+                        onClick={() => handleSelectCustomizationType('badge')}
+                      >
+                        <CardContent className="p-6 flex flex-col items-center text-center">
+                          <Award className="h-12 w-12 mb-3 text-primary" />
+                          <h4 className="font-medium">Badges</h4>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Show off your achievements
+                          </p>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card 
+                        className="cursor-pointer hover:bg-accent transition"
+                        onClick={() => handleSelectCustomizationType('theme')}
+                      >
+                        <CardContent className="p-6 flex flex-col items-center text-center">
+                          <Palette className="h-12 w-12 mb-3 text-primary" />
+                          <h4 className="font-medium">Themes</h4>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Personalize your experience
+                          </p>
+                        </CardContent>
+                      </Card>
                     </div>
+                    
+                    <Card className="mt-8">
+                      <CardHeader>
+                        <CardTitle>Your Collection</CardTitle>
+                        <CardDescription>
+                          Items you've unlocked so far
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        {isLoadingCustomizations ? (
+                          <div className="flex justify-center p-4">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                          </div>
+                        ) : userCustomizations.length > 0 ? (
+                          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                            {customizations
+                              .filter(item => userCustomizations.includes(item.name))
+                              .map(item => (
+                                <div 
+                                  key={item.id} 
+                                  className="text-center cursor-pointer"
+                                  onClick={() => handleShowCustomizationDetails(item)}
+                                >
+                                  {item.type === 'avatar' && (
+                                    <Avatar className="mx-auto h-10 w-10">
+                                      <AvatarImage src={`/assets/avatars/${item.name}.svg`} />
+                                      <AvatarFallback>{item.displayName[0]}</AvatarFallback>
+                                    </Avatar>
+                                  )}
+                                  {item.type === 'badge' && (
+                                    <Badge variant="secondary" className="mx-auto">
+                                      {item.displayName}
+                                    </Badge>
+                                  )}
+                                  {item.type === 'theme' && (
+                                    <div className="h-10 w-10 rounded-full mx-auto bg-primary"></div>
+                                  )}
+                                  <p className="text-xs mt-1">{item.displayName}</p>
+                                </div>
+                              ))}
+                          </div>
+                        ) : (
+                          <p className="text-center text-muted-foreground py-4">
+                            You haven't unlocked any customizations yet.
+                            Complete quizzes to earn tokens!
+                          </p>
+                        )}
+                      </CardContent>
+                    </Card>
                   </div>
-                </div>
+                )}
               </TabsContent>
               
               <TabsContent value="leaderboard">
