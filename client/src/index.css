@@ -11,3 +11,59 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* Theme specific styles */
+.theme-sakura {
+  background-image: linear-gradient(to bottom right, #FDF2F8, #FCE7F3);
+}
+
+.theme-sakura .bg-card,
+.theme-sakura .card {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border-color: #F9A8D4;
+}
+
+.theme-sakura button {
+  border: 1px solid #DB2777;
+}
+
+.theme-sakura .destructive {
+  border: 1px solid #BE123C;
+}
+
+.theme-sakura .border-input {
+  border-color: #F9A8D4;
+}
+
+.theme-sakura .bg-muted {
+  background-color: #FCE7F3;
+}
+
+.theme-sakura header {
+  background-image: linear-gradient(to right, #F9A8D4, #FBCFE8);
+}
+
+.theme-night {
+  background-color: #0F172A;
+  background-image: linear-gradient(to bottom, #0F172A, #1E293B);
+}
+
+.theme-night .bg-card,
+.theme-night .card {
+  background-color: #1E293B;
+  border-color: #334155;
+}
+
+.theme-night .bg-muted {
+  background-color: #1E293B;
+}
+
+.theme-night header {
+  background-image: linear-gradient(to right, #1E293B, #0F172A);
+}
+
+/* Add some transitioning for smooth theme changes */
+body, .card, header, .bg-card, .bg-muted {
+  transition: background-color 0.3s ease, background-image 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
