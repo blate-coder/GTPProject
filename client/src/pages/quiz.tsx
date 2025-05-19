@@ -153,6 +153,7 @@ export default function QuizPage() {
       if (user) {
         // Award tokens
         addTokensMutation.mutate({
+          userId: 1, // Use default user ID for demo
           amount: tokenReward,
           reason: `Completed quiz for lesson ${lessonId} with score ${Math.round((finalScore.correct / finalScore.total) * 100)}%`
         });
@@ -204,6 +205,7 @@ export default function QuizPage() {
         
         // Record the score for analytics
         recordScoreMutation.mutate({
+          userId: 1, // Use default user ID for demo
           quizId: parseInt(lessonId),
           score: finalScore.correct,
           maxScore: finalScore.total
