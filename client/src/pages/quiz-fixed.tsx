@@ -52,7 +52,6 @@ export default function QuizPage() {
   // Store shuffled options for each question
   const [shuffledOptionsMap, setShuffledOptionsMap] = useState<Record<number, string[]>>({});
   
-  // Explicitly cast the data type to fix type errors
   const { data: quiz, isLoading } = useQuery<QuizWithQuestions>({
     queryKey: [`/api/quizzes/${lessonId}`],
   });
