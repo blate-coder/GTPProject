@@ -24,23 +24,6 @@
   border-color: #F9A8D4;
 }
 
-.theme-sakura button,
-.theme-sakura a[role="button"],
-.theme-sakura [class*="Button"],
-.theme-sakura a.block {
-  border: 1px solid #f9a8d4 !important;
-  outline: 1px solid rgba(249, 168, 212, 0.3);
-}
-
-.theme-sakura button[class*="bg-primary"],
-.theme-sakura a[role="button"][class*="bg-primary"],
-.theme-sakura button.bg-primary,
-.theme-sakura .bg-destructive,
-.theme-sakura [class*="primary"] {
-  border: 1px solid #ec4899 !important;
-  box-shadow: 0 1px 3px rgba(236, 72, 153, 0.4);
-}
-
 .theme-sakura .bg-muted {
   background-color: #FCE7F3;
 }
@@ -52,30 +35,12 @@
 .theme-night {
   background-color: #0F172A;
   background-image: linear-gradient(to bottom, #0F172A, #1E293B);
-  color: #E2E8F0;
 }
 
 .theme-night .bg-card,
 .theme-night .card {
   background-color: #1E293B;
   border-color: #334155;
-}
-
-.theme-night button,
-.theme-night a[role="button"],
-.theme-night [class*="Button"],
-.theme-night a.block {
-  border: 1px solid #475569 !important;
-  outline: 1px solid rgba(71, 85, 105, 0.3);
-}
-
-.theme-night button[class*="bg-primary"],
-.theme-night a[role="button"][class*="bg-primary"],
-.theme-night button.bg-primary,
-.theme-night .bg-destructive,
-.theme-night [class*="primary"] {
-  border: 1px solid #3B82F6 !important;
-  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.4);
 }
 
 .theme-night .bg-muted {

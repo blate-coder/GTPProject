@@ -4,7 +4,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
-import { useTheme } from "@/hooks/use-theme";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +22,6 @@ export default function CustomizationDetail({
   onBack
 }: CustomizationDetailProps) {
   const { user } = useAuth();
-  const { setTheme } = useTheme();
   const queryClient = useQueryClient();
   const isUnlocked = unlockedCustomizations.includes(customization.name);
   
@@ -61,12 +59,6 @@ export default function CustomizationDetail({
         title: "Applied successfully!",
         description: `Your ${customization.type} has been updated.`,
       });
-      
-      // Apply theme if this is a theme customization
-      if (customization.type === 'theme' && 
-          ['default', 'sakura', 'night'].includes(customization.name)) {
-        setTheme(customization.name as any);
-      }
       
       // Invalidate relevant queries
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
