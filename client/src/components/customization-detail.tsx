@@ -162,11 +162,11 @@ export default function CustomizationDetail({
                 {customization.requiredScore && customization.requiredScore > 0 && (
                   <div className="flex justify-between">
                     <span>Minimum quiz score:</span>
-                    <span className={(user?.highestScore || 0) >= customization.requiredScore 
+                    <span className={(user?.progress?.highestScore || 0) >= customization.requiredScore 
                       ? "font-medium text-green-600 flex items-center" 
                       : "font-medium"}>
                       {customization.requiredScore}%
-                      {(user?.highestScore || 0) >= customization.requiredScore && 
+                      {(user?.progress?.highestScore || 0) >= customization.requiredScore && 
                         <CheckCircle className="h-4 w-4 ml-2" />
                       }
                     </span>

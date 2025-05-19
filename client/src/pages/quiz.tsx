@@ -156,6 +156,17 @@ export default function QuizPage() {
           amount: tokenReward,
           reason: `Completed quiz for lesson ${lessonId} with score ${percentage.toFixed(0)}%`
         });
+        // Get the current completed lessons array or create a new one
+        const completedLessons = user.completedLessons || [];
+        // Check if this lesson is already marked as completed
+        const lessonIdNumber = parseInt(lessonId);
+        const isLessonCompleted = completedLessons.includes(lessonIdNumber);
+        
+        // Add the lesson to completed lessons if it's not already there
+        const updatedCompletedLessons = isLessonCompleted 
+          ? completedLessons 
+          : [...completedLessons, lessonIdNumber];
+        
         const progressData = {
           ...user.progress,
           quizzes: {
@@ -166,7 +177,9 @@ export default function QuizPage() {
               total: finalScore.total,
               lastAttempt: new Date().toISOString()
             }
-          }
+          },
+          // Make sure to include the updated completed lessons
+          completedLessons: updatedCompletedLessons
         };
         
         updateProgressMutation.mutate(progressData);
