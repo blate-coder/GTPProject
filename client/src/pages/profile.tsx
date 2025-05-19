@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Trophy, Coins, User, Award, Palette, Grid3X3 } from "lucide-react";
+import { Loader2, Trophy, Coins, User, Award, Palette, Grid3X3, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { Redirect } from "wouter";
 import CustomizationDetail from "@/components/customization-detail";
@@ -32,6 +32,9 @@ export default function ProfilePage() {
     isCustomizationUnlocked,
     getCustomizationByName
   } = useCustomizations();
+  
+  // Extract just the names of unlocked customizations for easy checking
+  const unlockedCustomizationNames = userCustomizations.map(c => c.name);
   
   const {
     data: leaderboard = [],
@@ -172,7 +175,7 @@ export default function ProfilePage() {
                 {selectedCustomization ? (
                   <CustomizationDetail
                     customization={selectedCustomization}
-                    unlockedCustomizations={userCustomizations}
+                    unlockedCustomizations={unlockedCustomizationNames}
                     onBack={handleBackFromDetails}
                   />
                 ) : selectedCustomizationType ? (
@@ -317,7 +320,7 @@ export default function ProfilePage() {
                         ) : userCustomizations.length > 0 ? (
                           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
                             {customizations
-                              .filter(item => userCustomizations.includes(item.name))
+                              .filter(item => unlockedCustomizationNames.includes(item.name))
                               .map(item => (
                                 <div 
                                   key={item.id} 
