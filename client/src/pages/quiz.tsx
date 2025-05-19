@@ -154,23 +154,39 @@ export default function QuizPage() {
         // Award tokens
         addTokensMutation.mutate({
           amount: tokenReward,
-          reason: `Completed quiz for lesson ${lessonId} with score ${percentage.toFixed(0)}%`
+          reason: `Completed quiz for lesson ${lessonId} with score ${Math.round((finalScore.correct / finalScore.total) * 100)}%`
         });
-        // Get the current completed lessons array or create a new one
-        const completedLessons = user.completedLessons || [];
-        // Check if this lesson is already marked as completed
+        // Get current progress from user or create fresh object
+        const currentProgress = (user.progress as any) || {};
+        
+        // Get current completed lessons or create a new array
+        const currentCompletedLessons = 
+          currentProgress.completedLessons ? [...currentProgress.completedLessons] : [];
+          
+        // Get current quiz data
+        const currentQuizzes = currentProgress.quizzes || {};
+        
+        // Convert lesson ID to number
         const lessonIdNumber = parseInt(lessonId);
-        const isLessonCompleted = completedLessons.includes(lessonIdNumber);
         
-        // Add the lesson to completed lessons if it's not already there
-        const updatedCompletedLessons = isLessonCompleted 
-          ? completedLessons 
-          : [...completedLessons, lessonIdNumber];
+        // Check if this lesson is already completed
+        const isLessonCompleted = currentCompletedLessons.includes(lessonIdNumber);
         
+        // Add to completed lessons if not already there
+        if (!isLessonCompleted) {
+          currentCompletedLessons.push(lessonIdNumber);
+        }
+        
+        // Calculate highest score percentage
+        const scorePercentage = Math.round((finalScore.correct / finalScore.total) * 100);
+        const currentHighestScore = currentProgress.highestScore || 0;
+        const newHighestScore = Math.max(currentHighestScore, scorePercentage);
+        
+        // Construct the full progress data
         const progressData = {
-          ...user.progress,
+          ...currentProgress,
           quizzes: {
-            ...user.progress.quizzes,
+            ...currentQuizzes,
             [lessonId]: {
               completed: true,
               score: finalScore.correct,
@@ -178,8 +194,10 @@ export default function QuizPage() {
               lastAttempt: new Date().toISOString()
             }
           },
-          // Make sure to include the updated completed lessons
-          completedLessons: updatedCompletedLessons
+          // Update completed lessons
+          completedLessons: currentCompletedLessons,
+          // Update highest score if needed
+          highestScore: newHighestScore
         };
         
         updateProgressMutation.mutate(progressData);
