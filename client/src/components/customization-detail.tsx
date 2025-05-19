@@ -162,7 +162,14 @@ export default function CustomizationDetail({
                 {customization.requiredScore && customization.requiredScore > 0 && (
                   <div className="flex justify-between">
                     <span>Minimum quiz score:</span>
-                    <span className="font-medium">{customization.requiredScore}%</span>
+                    <span className={(user?.highestScore || 0) >= customization.requiredScore 
+                      ? "font-medium text-green-600 flex items-center" 
+                      : "font-medium"}>
+                      {customization.requiredScore}%
+                      {(user?.highestScore || 0) >= customization.requiredScore && 
+                        <CheckCircle className="h-4 w-4 ml-2" />
+                      }
+                    </span>
                   </div>
                 )}
                 
@@ -170,9 +177,15 @@ export default function CustomizationDetail({
                   <div>
                     <p>Complete lessons:</p>
                     <ul className="list-disc list-inside mt-1 pl-2">
-                      {customization.requiredLessons.map(lessonId => (
-                        <li key={lessonId} className="text-sm">Lesson {lessonId}</li>
-                      ))}
+                      {customization.requiredLessons.map(lessonId => {
+                        const isCompleted = user?.completedLessons?.includes(lessonId);
+                        return (
+                          <li key={lessonId} className={`text-sm flex items-center ${isCompleted ? "text-green-600" : ""}`}>
+                            <span>Lesson {lessonId}</span>
+                            {isCompleted && <CheckCircle className="h-4 w-4 ml-2" />}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
