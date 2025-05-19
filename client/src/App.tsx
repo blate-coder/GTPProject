@@ -13,7 +13,6 @@ import Analytics from "@/pages/analytics";
 import ProfilePage from "@/pages/profile";
 import Header from "@/components/header";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ThemeProvider } from "@/hooks/use-theme";
 
 function Router() {
   return (
@@ -40,10 +39,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider>
-          <Router />
-          <Toaster />
-        </ThemeProvider>
+        <Router />
+        <Toaster />
       </AuthProvider>
     </QueryClientProvider>
   );
