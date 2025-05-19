@@ -30,14 +30,10 @@ async function comparePasswords(supplied: string, stored: string) {
 
 export function setupAuth(app: Express) {
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.REPL_ID || 'japanese-learning-platform-secret',
+    secret: process.env.REPL_ID!,
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore,
-    cookie: {
-      secure: app.get("env") === "production",
-      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-    }
   };
 
   if (app.get("env") === "production") {
