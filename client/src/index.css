@@ -44,15 +44,57 @@
   background-image: linear-gradient(to right, #F9A8D4, #FBCFE8);
 }
 
+/* Toast notifications for Sakura theme */
+.theme-sakura .toast {
+  background-color: rgba(249, 168, 212, 0.2);
+  backdrop-filter: blur(8px);
+  border-color: #F9A8D4;
+}
+
+.theme-sakura .toast-title,
+.theme-sakura .toast-description {
+  color: #831843;
+}
+
 .theme-night {
   background-color: #0F172A;
   background-image: linear-gradient(to bottom, #0F172A, #1E293B);
+  color: #E2E8F0; /* Light text for better readability */
 }
 
 .theme-night .bg-card,
 .theme-night .card {
   background-color: #1E293B;
   border-color: #334155;
+}
+
+/* Toast notifications for Night theme */
+.theme-night .toast {
+  background-color: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(8px);
+  border-color: #334155;
+}
+
+.theme-night .toast-title,
+.theme-night .toast-description {
+  color: #E2E8F0;
+}
+
+/* Improve readability of text in dark theme */
+.theme-night p, 
+.theme-night h1, 
+.theme-night h2, 
+.theme-night h3, 
+.theme-night h4, 
+.theme-night label, 
+.theme-night span, 
+.theme-night div {
+  color: #E2E8F0;
+}
+
+.theme-night button, 
+.theme-night a {
+  color: inherit;
 }
 
 .theme-night .bg-muted {
