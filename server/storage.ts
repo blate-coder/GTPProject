@@ -88,7 +88,8 @@ export class MemStorage implements IStorage {
       imageUrl: null,
       tokenCost: 0,
       requiredScore: 0,
-      requiredLessons: []
+      requiredTokensEarned: 0,
+      requiredLessonsPlayed: 0
     });
     
     this.addCustomization({
@@ -99,7 +100,8 @@ export class MemStorage implements IStorage {
       imageUrl: null,
       tokenCost: 100,
       requiredScore: 50,
-      requiredLessons: []
+      requiredTokensEarned: 50,
+      requiredLessonsPlayed: 1
     });
     
     this.addCustomization({
@@ -110,7 +112,8 @@ export class MemStorage implements IStorage {
       imageUrl: null,
       tokenCost: 150,
       requiredScore: 65,
-      requiredLessons: []
+      requiredTokensEarned: 100,
+      requiredLessonsPlayed: 2
     });
     
     this.addCustomization({

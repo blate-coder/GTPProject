@@ -173,21 +173,31 @@ export default function CustomizationDetail({
                   </div>
                 )}
                 
-                {Array.isArray(customization.requiredLessons) && customization.requiredLessons.length > 0 && (
-                  <div>
-                    <p>Complete lessons:</p>
-                    <ul className="list-disc list-inside mt-1 pl-2">
-                      {customization.requiredLessons.map(lessonId => {
-                        const isCompleted = (user?.progress as any)?.completedLessons ? 
-                          ((user.progress as any).completedLessons as number[]).includes(lessonId) : false;
-                        return (
-                          <li key={lessonId} className={`text-sm flex items-center ${isCompleted ? "text-green-600" : ""}`}>
-                            <span>Lesson {lessonId}</span>
-                            {isCompleted && <CheckCircle className="h-4 w-4 ml-2" />}
-                          </li>
-                        );
-                      })}
-                    </ul>
+                {customization.requiredTokensEarned > 0 && (
+                  <div className="flex justify-between">
+                    <span>Total tokens earned:</span>
+                    <span className={(user?.tokens || 0) >= customization.requiredTokensEarned
+                      ? "font-medium text-green-600 flex items-center" 
+                      : "font-medium"}>
+                      {customization.requiredTokensEarned} tokens
+                      {(user?.tokens || 0) >= customization.requiredTokensEarned && 
+                        <CheckCircle className="h-4 w-4 ml-2" />
+                      }
+                    </span>
+                  </div>
+                )}
+                
+                {customization.requiredLessonsPlayed > 0 && (
+                  <div className="flex justify-between">
+                    <span>Lessons completed:</span>
+                    <span className={((user?.progress as any)?.completedLessons?.length || 0) >= customization.requiredLessonsPlayed
+                      ? "font-medium text-green-600 flex items-center" 
+                      : "font-medium"}>
+                      {customization.requiredLessonsPlayed} lessons
+                      {((user?.progress as any)?.completedLessons?.length || 0) >= customization.requiredLessonsPlayed && 
+                        <CheckCircle className="h-4 w-4 ml-2" />
+                      }
+                    </span>
                   </div>
                 )}
                 

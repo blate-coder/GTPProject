@@ -53,7 +53,8 @@ export const customizations = pgTable("customizations", {
   imageUrl: text("image_url"),
   tokenCost: integer("token_cost").notNull(),
   requiredScore: integer("required_score").default(0), // minimum score needed to unlock
-  requiredLessons: jsonb("required_lessons").default([]).notNull(), // array of lesson IDs needed to complete
+  requiredTokensEarned: integer("required_tokens_earned").default(0), // minimum total tokens earned
+  requiredLessonsPlayed: integer("required_lessons_played").default(0), // minimum number of lessons completed
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
