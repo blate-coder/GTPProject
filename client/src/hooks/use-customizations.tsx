@@ -75,13 +75,23 @@ export function useCustomizations() {
 
   // Add tokens to user (for development/testing)
   const addTokensMutation = useMutation({
-    mutationFn: async ({ amount, reason }: { amount: number, reason: string }) => {
-      const res = await apiRequest("POST", "/api/tokens", { amount, reason });
+    mutationFn: async ({ amount, reason, userId }: { amount: number, reason: string, userId?: number }) => {
+      // Include the userId parameter for guest users
+      const res = await apiRequest("POST", "/api/tokens", { amount, reason, userId });
       return await res.json();
     },
     onSuccess: (data) => {
       // Invalidate user profile
       queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      
+      // Also store tokens in localStorage for persistence
+      try {
+        const currentTokens = localStorage.getItem('userTokens') || '0';
+        const tokens = parseInt(currentTokens, 10);
+        localStorage.setItem('userTokens', data.newBalance.toString());
+      } catch (e) {
+        console.error('Failed to update local tokens', e);
+      }
       
       toast({
         title: "Tokens Updated",
