@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { toast } from "@/hooks/use-toast";
 import { useTheme } from "@/hooks/use-theme";
+import { useLessonCompletion } from "@/hooks/use-lesson-completion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +25,7 @@ export default function CustomizationDetail({
 }: CustomizationDetailProps) {
   const { user } = useAuth();
   const { setTheme } = useTheme();
+  const { highestScore, isLessonCompleted } = useLessonCompletion();
   const queryClient = useQueryClient();
   const isUnlocked = unlockedCustomizations.includes(customization.name);
   
@@ -162,11 +164,11 @@ export default function CustomizationDetail({
                 {customization.requiredScore && customization.requiredScore > 0 && (
                   <div className="flex justify-between">
                     <span>Minimum quiz score:</span>
-                    <span className={((user?.progress as any)?.highestScore || 0) >= customization.requiredScore 
+                    <span className={highestScore >= customization.requiredScore 
                       ? "font-medium text-green-600 flex items-center" 
                       : "font-medium"}>
                       {customization.requiredScore}%
-                      {((user?.progress as any)?.highestScore || 0) >= customization.requiredScore && 
+                      {highestScore >= customization.requiredScore && 
                         <CheckCircle className="h-4 w-4 ml-2" />
                       }
                     </span>
@@ -178,12 +180,11 @@ export default function CustomizationDetail({
                     <p>Complete lessons:</p>
                     <ul className="list-disc list-inside mt-1 pl-2">
                       {customization.requiredLessons.map(lessonId => {
-                        const isCompleted = (user?.progress as any)?.completedLessons ? 
-                          ((user.progress as any).completedLessons as number[]).includes(lessonId) : false;
+                        const completed = isLessonCompleted(lessonId);
                         return (
-                          <li key={lessonId} className={`text-sm flex items-center ${isCompleted ? "text-green-600" : ""}`}>
+                          <li key={lessonId} className={`text-sm flex items-center ${completed ? "text-green-600" : ""}`}>
                             <span>Lesson {lessonId}</span>
-                            {isCompleted && <CheckCircle className="h-4 w-4 ml-2" />}
+                            {completed && <CheckCircle className="h-4 w-4 ml-2" />}
                           </li>
                         );
                       })}

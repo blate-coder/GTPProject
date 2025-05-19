@@ -10,6 +10,7 @@ import type { Quiz } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useCustomizations } from "@/hooks/use-customizations";
+import { useLessonCompletion } from "@/hooks/use-lesson-completion";
 import { Progress } from "@/components/ui/progress";
 import { Check, X, Trophy, Coins, RotateCcw } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -29,6 +30,7 @@ export default function QuizPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { addTokensMutation } = useCustomizations();
+  const { completeLesson, updateHighestScore } = useLessonCompletion();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
   const [quizFinished, setQuizFinished] = useState(false);
@@ -130,6 +132,13 @@ export default function QuizPage() {
       
       // Calculate token rewards based on performance
       const percentage = (finalScore.correct / finalScore.total) * 100;
+      
+      // Mark this lesson as completed in our tracking system
+      completeLesson(parseInt(lessonId));
+      
+      // Update the highest score if needed
+      updateHighestScore(percentage);
+      
       // Base tokens for completing the quiz
       let tokenReward = 10;
       
